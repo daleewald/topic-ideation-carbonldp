@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { TopicService } from '../services/topic.service';
 
 @Component({
@@ -7,7 +8,8 @@ import { TopicService } from '../services/topic.service';
   styleUrls: ['./topic.component.css']
 })
 export class TopicComponent implements OnInit {
-  output: any = '';
+  topicName = new FormControl('');
+  output = '';
 
   constructor(private topicService: TopicService) {}
 
@@ -15,7 +17,7 @@ export class TopicComponent implements OnInit {
   }
 
   createTopicInCarbonLDP() {
-    this.topicService.createTopic();
+    this.topicService.createTopic(this.topicName.value);
   }
 
 }

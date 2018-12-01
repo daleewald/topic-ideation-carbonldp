@@ -13,9 +13,7 @@ export class TopicService {
     this.carbonldp = new CarbonLDP( 'http://carbon2.local.com:8083' );
   }
 
-  createTopic() {
-
-    console.log('>> TopicService.createTopic()');
+  createTopic(topicName: string) {
 
     interface Topic {
         name: string;
@@ -38,11 +36,28 @@ export class TopicService {
       ]
     };
 
-    this.carbonldp.documents.$create('topics/', topic ).then(
+    this.carbonldp.documents.$create('topics/', topic, this.makeFriendlySlug(topicName) ).then(
         ( topicDocument: Topic & Document ) => {
-          console.log(topic === topicDocument);
-          console.log(topic.$id);
+          return topic.$id;
         }
-    ).catch( error => console.error(error));
+    ).catch( error => {
+      return error;
+    });
+
   }
+
+  /**
+     * Takes a given string and makes it URL friendly. It ignores nonalphanumeric characters,
+     * replaces spaces with hyphens, and makes everything lower case.
+     * @param {*} str
+     */
+    makeFriendlySlug(str) {
+        // \W represents any nonalphanumeric character so that, for example, 'A&P Grocery' becomes 'a-p-grocery'
+        let friendlySlug = str.replace(/\W+/g, '-').toLowerCase();
+        // If the last char was nonalphanumeric, we could end with a hyphen, so trim that off, if so...
+        if (friendlySlug.substring(friendlySlug.length - 1) === "-") {
+            friendlySlug = friendlySlug.substring(0, friendlySlug.length - 1);
+        }
+        return friendlySlug;
+    }
 }
