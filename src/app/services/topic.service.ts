@@ -1,46 +1,44 @@
 import { Injectable } from '@angular/core';
-import { CarbonLDP } from "carbonldp/CarbonLDP";
-import { Document } from "carbonldp/Document";
+import { CarbonLDP } from 'carbonldp/CarbonLDP';
+import { Document } from 'carbonldp/Document';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TopicService {
-  carbonldp:CarbonLDP;
+  carbonldp: CarbonLDP;
 
   constructor() {
-  }
-
-  createInstance() {
-//
+    // initialize your CarbonLDP object with the domain where your platform lives
+    this.carbonldp = new CarbonLDP( 'http://carbon2.local.com:8083' );
   }
 
   createTopic() {
-    // initialize your CarbonLDP object with the domain where your platform lives
-    //this.carbonldp = new CarbonLDP( "http://carbon2.local.com:8083" );
+
+    console.log('>> TopicService.createTopic()');
 
     interface Topic {
-        name: string,
-        [propName: string]: any
+        name: string;
+        [propName: string]: any;
     }
 
-    let topic:Topic = {
-      name: "TopicA",
+    const topic: Topic = {
+      name: 'TopicA',
       participants: [
-        "Cholla Saguaro",
-        "Prickly Pear"
+        'Cholla Saguaro',
+        'Prickly Pear'
       ],
       ideas: [
         {
-          description: "Create a topic-based ideation utility"
+          description: 'Create a topic-based ideation utility'
         },
         {
-          description: "Enable multiple participants"
+          description: 'Enable multiple participants'
         }
       ]
     };
 
-    this.carbonldp.documents.$create("/", topic ).then(
+    this.carbonldp.documents.$create('topics/', topic ).then(
         ( topicDocument: Topic & Document ) => {
           console.log(topic === topicDocument);
           console.log(topic.$id);
