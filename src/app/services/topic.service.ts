@@ -27,8 +27,8 @@ export class TopicService {
     let topic:Topic = {
       name: "TopicA",
       participants: [
-        "Dale Ewald",
-        "Michele Ewald"
+        "Cholla Saguaro",
+        "Prickly Pear"
       ],
       ideas: [
         {
