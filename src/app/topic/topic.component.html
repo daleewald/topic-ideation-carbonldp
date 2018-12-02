@@ -6,8 +6,13 @@
         <h6 [ngClass]="'card-title'">Enter a Topic Name</h6>
         <input #newTopic type="text" [formControl]="topicName" [ngClass]="'form-control'" (keyup)="showUriToBe(newTopic.value)">
         <small [ngClass]="'form-text text-muted'">URI :: {{uriToBe}}</small>
-        </div>
-        <button (click)="createTopicInCarbonLDP()" [ngClass]="'btn btn-default'">Create</button>
+      </div>
+        <nav [ngClass]="'listNav'">
+          <button [ngClass]="'btn btn-primary btn-sm'" (click)="createTopicInCarbonLDP()">Create</button>
+          <button (click)="navBack()" [ngClass]="'btn btn-outline-primary btn-sm'">Return</button>
+        </nav>
+
+
         <div [ngClass]="getMessageClass()">{{output}}</div>
     </div>
   </div>

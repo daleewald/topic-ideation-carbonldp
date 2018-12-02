@@ -6,6 +6,7 @@ import { TopicComponent } from './topic/topic.component';
 
 import { TopicService } from './services/topic.service';
 import { TopicListComponent } from './topic-list/topic-list.component';
+import { AppRoutingModule } from './app-routing.module';
 
 @NgModule({
   providers: [
@@ -19,7 +20,8 @@ import { TopicListComponent } from './topic-list/topic-list.component';
   imports: [
     BrowserModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    AppRoutingModule
   ],
   bootstrap: [AppComponent]
 })

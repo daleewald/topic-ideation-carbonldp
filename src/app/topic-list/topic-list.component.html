@@ -1,5 +1,14 @@
 <div [ngClass]="'container'">
-<h4>Topics</h4>
+  <div [ngClass]="'row'">
+    <div [ngClass]="'col-sm'">
+      <h4>Topics</h4>
+    </div>
+    <div [ngClass]="'col-sm-auto'">
+      <nav [ngClass]="'listNav'">
+        <a [ngClass]="'btn btn-outline-primary btn-sm'" routerLink="/create-topic">Create Topic</a>
+      </nav>
+    </div>
+  </div>
 <div *ngIf="noTopics()">No Topics yet</div>
 <ul [ngClass]="'topicList list-group'">
   <li *ngFor="let topic of topicList" [ngClass]="'list-group-item'">{{topic.name}} :: <i>{{topic.$id}}</i></li>

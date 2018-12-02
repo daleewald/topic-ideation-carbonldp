@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { Location } from '@angular/common';
 import { TopicService } from '../services/topic.service';
 
 @Component({
@@ -13,11 +14,18 @@ export class TopicComponent implements OnInit {
   isError = false;
   uriToBe = '';
 
-  constructor(private topicService: TopicService) {
+  constructor(
+    private topicService: TopicService,
+    private location: Location
+  ) {
     this.showUriToBe('');
   }
 
   ngOnInit() {
+  }
+
+  navBack(): void {
+    this.location.back();
   }
 
   showUriToBe(value: string) {
