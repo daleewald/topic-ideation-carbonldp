@@ -1,6 +1,14 @@
-<label>
-  Create Topic
-  <input type="text" [formControl]="topicName">
-</label>
-<button (click)="createTopicInCarbonLDP()">Create</button>
-<div [ngClass]="getMessageClass()">{{output}}</div>
+<div [ngClass]="'container'">
+  <div [ngClass]="'card'">
+    <h5 [ngClass]="'card-header'">Create a Topic</h5>
+    <div [ngClass]="'form card-body'">
+      <div [ngClass]="'form-group'">
+        <h6 [ngClass]="'card-title'">Enter a Topic Name</h6>
+        <input #newTopic type="text" [formControl]="topicName" [ngClass]="'form-control'" (keyup)="showUriToBe(newTopic.value)">
+        <small [ngClass]="'form-text text-muted'">URI :: {{uriToBe}}</small>
+        </div>
+        <button (click)="createTopicInCarbonLDP()" [ngClass]="'btn btn-default'">Create</button>
+        <div [ngClass]="getMessageClass()">{{output}}</div>
+    </div>
+  </div>
+</div>

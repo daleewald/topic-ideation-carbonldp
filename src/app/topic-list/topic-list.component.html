@@ -1,3 +1,7 @@
-<ul class="topicList">
-  <li *ngFor="let topic of topicList">{{topic.name}} :: <i>{{topic.$id}}</i></li>
+<div [ngClass]="'container'">
+<h4>Topics</h4>
+<div *ngIf="noTopics()">No Topics yet</div>
+<ul [ngClass]="'topicList list-group'">
+  <li *ngFor="let topic of topicList" [ngClass]="'list-group-item'">{{topic.name}} :: <i>{{topic.$id}}</i></li>
 </ul>
+</div>

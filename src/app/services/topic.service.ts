@@ -10,12 +10,13 @@ import { Subject } from 'rxjs';
 })
 export class TopicService {
   carbonldp: CarbonLDP;
+  carbonUri: string = 'http://carbon2.local.com:8083';
   topicsRoot: string = "topics/";
   private topicAddedSource = new Subject<Topic & Document>();
 
   constructor() {
     // initialize your CarbonLDP object with the domain where your platform lives
-    this.carbonldp = new CarbonLDP( 'http://carbon2.local.com:8083' );
+    this.carbonldp = new CarbonLDP( this.carbonUri );
   }
 
   listTopicDocuments() {
@@ -73,7 +74,7 @@ export class TopicService {
         }
     ).catch( error => {
       if (error instanceof ConflictError) {
-        reject("A topic already exists with this name/id");
+        reject("A topic already exists with this name/uri");
       } else {
         reject(error);
       }

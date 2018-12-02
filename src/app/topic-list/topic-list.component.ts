@@ -9,6 +9,10 @@ import { TopicService } from '../services/topic.service';
 export class TopicListComponent implements OnInit {
   topicList = [];
 
+  noTopics() {
+    return this.topicList.length === 0;
+  }
+
   constructor(private topicService: TopicService) {
     this.getTopicListFromService();
     topicService.topicAdded$.subscribe(
