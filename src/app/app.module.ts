@@ -5,6 +5,7 @@ import { AppComponent } from './app.component';
 import { TopicComponent } from './topic/topic.component';
 
 import { TopicService } from './services/topic.service';
+import { TopicListComponent } from './topic-list/topic-list.component';
 
 @NgModule({
   providers: [
@@ -12,7 +13,8 @@ import { TopicService } from './services/topic.service';
   ],
   declarations: [
     AppComponent,
-    TopicComponent
+    TopicComponent,
+    TopicListComponent
   ],
   imports: [
     BrowserModule,

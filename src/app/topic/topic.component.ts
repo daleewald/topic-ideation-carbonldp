@@ -10,6 +10,7 @@ import { TopicService } from '../services/topic.service';
 export class TopicComponent implements OnInit {
   topicName = new FormControl('');
   output = '';
+  isError = false;
 
   constructor(private topicService: TopicService) {}
 
@@ -19,12 +20,22 @@ export class TopicComponent implements OnInit {
   createTopicInCarbonLDP() {
     this.topicService.createTopic(this.topicName.value).then(
         ( topicUri:string) => {
-          this.output = topicUri;
+          this.isError = false;
+          this.output = "Topic successfully created.";
       }).catch(
         error => {
+          this.isError = true;
           this.output = error;
         }
       );
+  }
+
+  getMessageClass() {
+    return {
+      'message':true,
+      'text-danger':this.isError,
+      'text-success':!this.isError
+    }
   }
 
 }

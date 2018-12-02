@@ -1,23 +1,52 @@
 import { Injectable } from '@angular/core';
+import { Topic } from './Topic';
 import { CarbonLDP } from 'carbonldp/CarbonLDP';
 import { Document } from 'carbonldp/Document';
+import { ConflictError } from 'carbonldp/HTTP/Errors';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TopicService {
   carbonldp: CarbonLDP;
+  topicsRoot: string = "topics/";
+  private topicAddedSource = new Subject<Topic & Document>();
 
   constructor() {
     // initialize your CarbonLDP object with the domain where your platform lives
     this.carbonldp = new CarbonLDP( 'http://carbon2.local.com:8083' );
   }
 
+  listTopicDocuments() {
+    let promise = new Promise((resolve, reject) => {
+      this.carbonldp.documents.$getChildren<Topic>( this.topicsRoot ).then(
+        ( topics:( Topic & Document )[] ) => {
+          resolve(topics); // array of shallow documents
+        }
+      ).catch( error => { reject(error); });
+    });
+    return promise;
+  }
+
+  listTopics() {
+    let promise = new Promise((resolve, reject) => {
+      this.carbonldp.documents.$listChildren<Topic>( this.topicsRoot ).then(
+        ( topics:( Topic & Document )[] ) => {
+          resolve(topics); // array of shallow documents
+        }
+      ).catch( error => { reject(error); });
+    });
+    return promise;
+  }
+
+  topicAdded$ = this.topicAddedSource.asObservable();
+
+  topicCreated(topic: Topic & Document) {
+    this.topicAddedSource.next(topic);
+  }
+
   createTopic(topicName: string) {
-    interface Topic {
-        name: string;
-        [propName: string]: any;
-    }
 
     const topic: Topic = {
       name: topicName,
@@ -37,12 +66,17 @@ export class TopicService {
 
     let promise = new Promise((resolve, reject) => {
 
-    this.carbonldp.documents.$create('topics/', topic, this.makeFriendlySlug(topicName) ).then(
+    this.carbonldp.documents.$create(this.topicsRoot, topic, this.makeFriendlySlug(topicName) ).then(
         ( topicDocument: Topic & Document ) => {
+          this.topicCreated(topicDocument);
           resolve(topic.$id);
         }
     ).catch( error => {
-      reject(error);
+      if (error instanceof ConflictError) {
+        reject("A topic already exists with this name/id");
+      } else {
+        reject(error);
+      }
     });
   });
   return promise;
@@ -62,4 +96,6 @@ export class TopicService {
         }
         return friendlySlug;
     }
+
+
 }

@@ -3,4 +3,4 @@
   <input type="text" [formControl]="topicName">
 </label>
 <button (click)="createTopicInCarbonLDP()">Create</button>
-<div>{{output}}</div>
+<div [ngClass]="getMessageClass()">{{output}}</div>
