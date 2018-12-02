@@ -14,14 +14,13 @@ export class TopicService {
   }
 
   createTopic(topicName: string) {
-
     interface Topic {
         name: string;
         [propName: string]: any;
     }
 
     const topic: Topic = {
-      name: 'TopicA',
+      name: topicName,
       participants: [
         'Cholla Saguaro',
         'Prickly Pear'
@@ -36,14 +35,17 @@ export class TopicService {
       ]
     };
 
+    let promise = new Promise((resolve, reject) => {
+
     this.carbonldp.documents.$create('topics/', topic, this.makeFriendlySlug(topicName) ).then(
         ( topicDocument: Topic & Document ) => {
-          return topic.$id;
+          resolve(topic.$id);
         }
     ).catch( error => {
-      return error;
+      reject(error);
     });
-
+  });
+  return promise;
   }
 
   /**

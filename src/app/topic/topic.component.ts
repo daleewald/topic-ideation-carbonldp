@@ -17,7 +17,14 @@ export class TopicComponent implements OnInit {
   }
 
   createTopicInCarbonLDP() {
-    this.topicService.createTopic(this.topicName.value);
+    this.topicService.createTopic(this.topicName.value).then(
+        ( topicUri:string) => {
+          this.output = topicUri;
+      }).catch(
+        error => {
+          this.output = error;
+        }
+      );
   }
 
 }
