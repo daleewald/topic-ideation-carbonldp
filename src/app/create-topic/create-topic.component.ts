@@ -5,10 +5,10 @@ import { TopicService } from '../services/topic.service';
 
 @Component({
   selector: 'ti-topic',
-  templateUrl: './topic.component.html',
-  styleUrls: ['./topic.component.css']
+  templateUrl: './create-topic.component.html',
+  styleUrls: ['./create-topic.component.css']
 })
-export class TopicComponent implements OnInit {
+export class CreateTopicComponent implements OnInit {
   topicName = new FormControl('');
   output = '';
   isError = false;

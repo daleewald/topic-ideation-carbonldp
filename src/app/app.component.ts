@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { TopicService } from './services/topic.service';
 
 @Component({
   selector: 'ti-root',

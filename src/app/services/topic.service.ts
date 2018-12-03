@@ -17,13 +17,29 @@ export class TopicService {
   constructor() {
     // initialize your CarbonLDP object with the domain where your platform lives
     this.carbonldp = new CarbonLDP( this.carbonUri );
+
+
+    this.carbonldp.extendObjectSchema( "Topic", {
+        "participants": {
+          "@container":"@set"
+        }
+    });
+    this.carbonldp.extendObjectSchema( "Idea", {
+       "likes": {
+         "@container":"@set"
+       },
+       "dislikes": {
+         "@container":"@set"
+       }
+    });
+
   }
 
   listTopicDocuments() {
     let promise = new Promise((resolve, reject) => {
       this.carbonldp.documents.$getChildren<Topic>( this.topicsRoot ).then(
         ( topics:( Topic & Document )[] ) => {
-          resolve(topics); // array of shallow documents
+          resolve(topics); // array of full documents
         }
       ).catch( error => { reject(error); });
     });
@@ -47,22 +63,11 @@ export class TopicService {
     this.topicAddedSource.next(topic);
   }
 
-  createTopic(topicName: string) {
+  createTopic(topicName: string, participants?: any[]) {
 
     const topic: Topic = {
       name: topicName,
-      participants: [
-        'Cholla Saguaro',
-        'Prickly Pear'
-      ],
-      ideas: [
-        {
-          description: 'Create a topic-based ideation utility'
-        },
-        {
-          description: 'Enable multiple participants'
-        }
-      ]
+      participants: participants
     };
 
     let promise = new Promise((resolve, reject) => {
