@@ -11,7 +11,9 @@ import { AuthService } from '../services/auth.service';
   styleUrls: ['./view-topic.component.css']
 })
 export class ViewTopicComponent implements OnInit {
-  topic: any = {};
+  topic: any = {
+    owner: {}
+  };
   deleteTopicName = new FormControl('');
   deleteRequested: boolean = false;
   deleteConfirmed: boolean = false;
@@ -34,8 +36,13 @@ export class ViewTopicComponent implements OnInit {
     const slug = this.route.snapshot.paramMap.get('slug');
     this.topicService.getTopic(slug).then(
       (sTopic:any) => {
+          if (! sTopic.$isResolved()) sTopic.$resolve();
           this.topic = sTopic;
-          this.participants = sTopic.participants;
+          this.participants = [];
+          for (let participant in sTopic.participants) {
+            this.participants.push(sTopic.participants[participant]);
+          }
+//          this.participants = sTopic.participants;
       }
     ).catch( error => console.log(error) );
   }

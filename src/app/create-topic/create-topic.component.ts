@@ -41,7 +41,7 @@ export class CreateTopicComponent implements OnInit {
   createTopicInCarbonLDP() {
     let userParticipant = this.authService.userParticipant;
 
-    this.topicService.createTopic(this.topicName.value, [userParticipant]).then(
+    this.topicService.createTopic(this.topicName.value, userParticipant, [userParticipant]).then(
         ( topic:any) => {
           this.isError = false;
           this.topicName.reset();

@@ -3,7 +3,9 @@
     <h5 [ngClass]="'card-header'">{{ topic.name }}</h5>
     <div [ngClass]="'card-body'">
       <p [ngClass]="'lead'">
-        {{ participants | json }}
+        <strong>Owner: </strong><span class="badge badge-light">{{ topic.owner.firstName }} {{ topic.owner.lastName }}</span><br>
+        <strong>Participants: </strong>
+            <span *ngFor="let participant of participants" class="badge badge-light">{{participant.firstName}} {{participant.lastName}}</span>
       </p>
       <hr>
       <small [ngClass]="'text-muted'">{{ topic | json }}</small>

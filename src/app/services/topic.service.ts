@@ -91,11 +91,13 @@ export class TopicService {
     this.topicAddedSource.next(topic);
   }
 
-  createTopic(topicName: string, participants?: any[]) {
+  createTopic(topicName: string, owner: any, participants?: any[]) {
 
     const topic: Topic = {
       name: topicName,
-      participants: participants
+      owner: owner,
+      participants: participants,
+      types: [ "Topic" ]
     };
 
     let promise = new Promise((resolve, reject) => {
@@ -127,7 +129,8 @@ export class TopicService {
       firstName: firstName,
       lastName: lastName,
       email: email,
-      passphrase: passphrase
+      passphrase: passphrase,
+      types: [ "Participant" ]
     }
     let promise:Promise<Participant & Document> = new Promise<Participant & Document>((resolve,reject) => {
       this.carbonldp.documents.$create(this.participantsRoot, participant, slug).then(
