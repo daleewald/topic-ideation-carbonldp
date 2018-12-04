@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Location } from '@angular/common';
+import { Router } from '@angular/router';
 import { TopicService } from '../services/topic.service';
 
 @Component({
@@ -15,6 +16,7 @@ export class CreateTopicComponent implements OnInit {
   uriToBe = '';
 
   constructor(
+    private router: Router,
     private topicService: TopicService,
     private location: Location
   ) {
@@ -36,11 +38,12 @@ export class CreateTopicComponent implements OnInit {
 
   createTopicInCarbonLDP() {
     this.topicService.createTopic(this.topicName.value).then(
-        ( topicUri:string) => {
+        ( topic:any) => {
           this.isError = false;
           this.topicName.reset();
           this.showUriToBe('');
           this.output = "Topic successfully created.";
+          this.router.navigate(["/view-topic/" + topic.$slug ])
       }).catch(
         error => {
           this.isError = true;

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { TopicService } from '../services/topic.service';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'ti-topic-list',
@@ -22,15 +23,15 @@ export class TopicListComponent implements OnInit {
     );
   }
 
+  ngOnInit() {
+  }
+
   getTopicListFromService() {
     this.topicService.listTopicDocuments().then(
       (sTopicList:any) => {
           this.topicList = sTopicList;
       }
     ).catch( error => { console.error(error); } );
-  }
-
-  ngOnInit() {
   }
 
 }

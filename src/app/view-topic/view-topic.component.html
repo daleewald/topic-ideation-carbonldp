@@ -1,0 +1,17 @@
+<div [ngClass]="'container'">
+  <div [ngClass]="'card'">
+    <h5 [ngClass]="'card-header'">{{ topic.name }}</h5>
+    <div [ngClass]="'form card-body'">
+      <small [ngClass]="'form-text text-muted'">{{ topic | json }}</small>
+    </div>
+  </div>
+  <div *ngIf="isDeleteRequested()" [ngClass]="'form-group delete-group'">
+    <h6 [ngClass]="'card-title'">Enter the Topic Name to confirm you want to delete it, and click Delete again.</h6>
+    <input type="text" [formControl]="deleteTopicName" [ngClass]="'form-control'">
+    <small [ngClass]="'form-text text-muted'">This will delete all data at URI :: {{topic.$id}}</small>
+  </div>
+  <nav [ngClass]="'listNav'">
+    <button [ngClass]="'btn btn-primary btn-sm'" (click)="deleteTopic()">Delete</button>
+    <button (click)="navBack()" [ngClass]="'btn btn-outline-primary btn-sm'">Return</button>
+  </nav>
+</div>

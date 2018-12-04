@@ -3,7 +3,7 @@ import { Topic } from './Topic';
 import { CarbonLDP } from 'carbonldp/CarbonLDP';
 import { Document } from 'carbonldp/Document';
 import { ConflictError } from 'carbonldp/HTTP/Errors';
-import { Subject } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -33,6 +33,15 @@ export class TopicService {
        }
     });
 
+  }
+
+  getTopic(slug: string): Promise<Document & Topic> {
+    let topicId:string = this.topicsRoot + slug + '/';
+    return this.carbonldp.documents.$get<Document & Topic>( topicId );
+  }
+
+  deleteTopic(topic: Document & Topic): Promise<any> {
+    return topic.$delete();
   }
 
   listTopicDocuments() {
@@ -75,7 +84,7 @@ export class TopicService {
     this.carbonldp.documents.$create(this.topicsRoot, topic, this.makeFriendlySlug(topicName) ).then(
         ( topicDocument: Topic & Document ) => {
           this.topicCreated(topicDocument);
-          resolve(topic.$id);
+          resolve(topic);
         }
     ).catch( error => {
       if (error instanceof ConflictError) {
