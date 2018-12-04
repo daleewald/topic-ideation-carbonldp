@@ -61,7 +61,8 @@ export class ViewTopicComponent implements OnInit {
     return this.authService.isLoggedIn;
   }
   isAllowedToDelete() {
-    return this.isAuthenticated() && (this.topic.participants[0].$id === this.authService.userParticipant.$id);
+    console.log(this.topic);
+    return this.isAuthenticated(); // && (this.topic.participants[0].$id === this.authService.userParticipant.$id);
   }
 
   isDeleteRequested() {
