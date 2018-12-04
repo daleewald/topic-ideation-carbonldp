@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Topic } from './Topic';
+import { Topic } from './topic';
+import { Participant } from './participant'
 import { CarbonLDP } from 'carbonldp/CarbonLDP';
 import { Document } from 'carbonldp/Document';
 import { ConflictError } from 'carbonldp/HTTP/Errors';
@@ -12,6 +13,7 @@ export class TopicService {
   carbonldp: CarbonLDP;
   carbonUri: string = 'http://carbon2.local.com:8083';
   topicsRoot: string = "topics/";
+  participantsRoot: string = "participants/";
   private topicAddedSource = new Subject<Topic & Document>();
 
   constructor() {
@@ -32,12 +34,29 @@ export class TopicService {
          "@container":"@set"
        }
     });
+    this.carbonldp.extendObjectSchema( "Participant", {
+      "firstName":"string",
+      "lastName":"string",
+      "email":"string",
+      "passphrase":"string"
+    });
 
   }
 
   getTopic(slug: string): Promise<Document & Topic> {
     let topicId:string = this.topicsRoot + slug + '/';
-    return this.carbonldp.documents.$get<Document & Topic>( topicId );
+    let promise: Promise<Document & Topic> = new Promise<Document & Topic>((resolve, reject) => {
+      this.carbonldp.documents.$get<Document & Topic>( topicId ).then(
+        (topic: Topic & Document) => {
+          topic.$resolve().then(
+            (topic: Topic & Document) => {
+              resolve(topic);
+            }
+          );
+        }
+      ).catch(error => reject(error));
+    });
+    return promise;
   }
 
   deleteTopic(topic: Document & Topic): Promise<any> {
@@ -95,6 +114,35 @@ export class TopicService {
     });
   });
   return promise;
+  }
+
+  getParticipantByEmail(email: string): Promise<Document & Participant> {
+    let slug: string = this.makeFriendlySlug(email);
+    return this.carbonldp.documents.$get(this.participantsRoot + slug + "/");
+  }
+
+  createParticipant(firstName:string, lastName:string, email:string, passphrase:string): Promise<Participant & Document> {
+    let slug: string = this.makeFriendlySlug(email);
+    let participant:Participant = {
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      passphrase: passphrase
+    }
+    let promise:Promise<Participant & Document> = new Promise<Participant & Document>((resolve,reject) => {
+      this.carbonldp.documents.$create(this.participantsRoot, participant, slug).then(
+        ( participantDocument: Participant & Document) => {
+          resolve(participantDocument);
+        }
+      ).catch( error => {
+        if (error instanceof ConflictError) {
+          reject("A participant already exists with this email address");
+        } else {
+          reject(error);
+        }
+      })
+    });
+    return promise;
   }
 
   /**

@@ -3,6 +3,7 @@ import { FormControl } from '@angular/forms';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { TopicService } from '../services/topic.service';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'ti-topic',
@@ -18,7 +19,8 @@ export class CreateTopicComponent implements OnInit {
   constructor(
     private router: Router,
     private topicService: TopicService,
-    private location: Location
+    private location: Location,
+    private authService: AuthService
   ) {
     this.showUriToBe('');
   }
@@ -37,7 +39,9 @@ export class CreateTopicComponent implements OnInit {
   }
 
   createTopicInCarbonLDP() {
-    this.topicService.createTopic(this.topicName.value).then(
+    let userParticipant = this.authService.userParticipant;
+
+    this.topicService.createTopic(this.topicName.value, [userParticipant]).then(
         ( topic:any) => {
           this.isError = false;
           this.topicName.reset();

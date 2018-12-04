@@ -5,19 +5,23 @@ import { AppComponent } from './app.component';
 import { CreateTopicComponent } from './create-topic/create-topic.component';
 
 import { TopicService } from './services/topic.service';
+import { AuthService } from './services/auth.service';
 import { TopicListComponent } from './topic-list/topic-list.component';
 import { AppRoutingModule } from './app-routing.module';
 import { ViewTopicComponent } from './view-topic/view-topic.component';
+import { AccountComponent } from './account/account.component';
 
 @NgModule({
   providers: [
-    TopicService
+    TopicService,
+    AuthService
   ],
   declarations: [
     AppComponent,
     CreateTopicComponent,
     TopicListComponent,
-    ViewTopicComponent
+    ViewTopicComponent,
+    AccountComponent
   ],
   imports: [
     BrowserModule,

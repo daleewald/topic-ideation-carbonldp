@@ -3,6 +3,7 @@ import { FormControl } from '@angular/forms';
 import { Location } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { TopicService } from '../services/topic.service';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'ti-view-topic',
@@ -14,13 +15,15 @@ export class ViewTopicComponent implements OnInit {
   deleteTopicName = new FormControl('');
   deleteRequested: boolean = false;
   deleteConfirmed: boolean = false;
+  participants: any = [];
   messages: string = '';
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private topicService: TopicService,
-    private location: Location
+    private location: Location,
+    private authService: AuthService
   ) { }
 
   ngOnInit() {
@@ -32,7 +35,7 @@ export class ViewTopicComponent implements OnInit {
     this.topicService.getTopic(slug).then(
       (sTopic:any) => {
           this.topic = sTopic;
-          console.log(sTopic);
+          this.participants = sTopic.participants;
       }
     ).catch( error => console.log(error) );
   }
@@ -52,6 +55,13 @@ export class ViewTopicComponent implements OnInit {
       }
     }
 
+  }
+
+  isAuthenticated():boolean {
+    return this.authService.isLoggedIn;
+  }
+  isAllowedToDelete() {
+    return this.isAuthenticated() && (this.topic.participants[0].$id === this.authService.userParticipant.$id);
   }
 
   isDeleteRequested() {

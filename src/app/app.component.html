@@ -5,6 +5,9 @@
     <h4>Topic Ideation</h4>
     <i>Create or join Topics and collect ideas to vote on</i>
   </div>
+  <div class="col-sm-auto">
+    <a routerLink="/account" *ngIf="isAuthenticated()" [ngClass]="'btn btn-outline-default btn-sm'">Account</a>
+  </div>
 </div>
   <router-outlet></router-outlet>
 </div>
