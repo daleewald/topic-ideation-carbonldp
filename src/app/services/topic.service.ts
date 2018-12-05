@@ -5,18 +5,23 @@ import { CarbonLDP } from 'carbonldp/CarbonLDP';
 import { Document } from 'carbonldp/Document';
 import { ConflictError } from 'carbonldp/HTTP/Errors';
 import { Observable, of, Subject } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TopicService {
+
   carbonldp: CarbonLDP;
-  carbonUri: string = 'http://carbon2.local.com:8083';
+
+  carbonUri: string;
+
   topicsRoot: string = "topics/";
   participantsRoot: string = "participants/";
   private topicAddedSource = new Subject<Topic & Document>();
 
   constructor() {
+    this.carbonUri = environment.carbonldp.protocol + '://' + environment.carbonldp.host;
     // initialize your CarbonLDP object with the domain where your platform lives
     this.carbonldp = new CarbonLDP( this.carbonUri );
 
