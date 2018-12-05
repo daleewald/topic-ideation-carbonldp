@@ -134,8 +134,7 @@ export class TopicService {
       firstName: firstName,
       lastName: lastName,
       email: email,
-      passphrase: passphrase,
-      types: [ "Participant" ]
+      passphrase: passphrase
     }
     let promise:Promise<Participant & Document> = new Promise<Participant & Document>((resolve,reject) => {
       this.carbonldp.documents.$create(this.participantsRoot, participant, slug).then(

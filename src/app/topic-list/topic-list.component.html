@@ -10,9 +10,9 @@
     </div>
   </div>
 <div *ngIf="noTopics()">No Topics yet</div>
-<ul [ngClass]="'topicList list-group'">
-  <li *ngFor="let topic of topicList" [ngClass]="'list-group-item'">
-    <a routerLink="/view-topic/{{topic.$slug}}">{{topic.name}}</a> :: <i>{{topic.$id}}</i>
-  </li>
-</ul>
+  <ul [ngClass]="'topicList list-group'">
+    <li *ngFor="let topic of topicList" [ngClass]="'list-group-item'">
+      <a routerLink="/view-topic/{{topic.$slug}}">{{topic.name}}</a> :: <i>{{topic.$id}}</i>
+    </li>
+  </ul>
 </div>
