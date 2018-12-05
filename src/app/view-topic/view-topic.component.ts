@@ -36,12 +36,7 @@ export class ViewTopicComponent implements OnInit {
     const slug = this.route.snapshot.paramMap.get('slug');
     this.topicService.getTopic(slug).then(
       (sTopic:any) => {
-          if (! sTopic.$isResolved()) sTopic.$resolve();
           this.topic = sTopic;
-          this.participants = [];
-          for (let participant in sTopic.participants) {
-            this.participants.push(sTopic.participants[participant]);
-          }
 //          this.participants = sTopic.participants;
       }
     ).catch( error => console.log(error) );
@@ -69,7 +64,7 @@ export class ViewTopicComponent implements OnInit {
   }
   isAllowedToDelete() {
     console.log(this.topic);
-    return this.isAuthenticated(); // && (this.topic.participants[0].$id === this.authService.userParticipant.$id);
+    return this.isAuthenticated() && (this.topic.owner === this.authService.userParticipant);
   }
 
   isDeleteRequested() {
