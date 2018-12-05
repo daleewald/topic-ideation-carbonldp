@@ -13,4 +13,7 @@ export class AppComponent {
   isAuthenticated(): boolean {
     return this.authService.isLoggedIn;
   }
+  isNotAuthenticated(): boolean {
+    return (this.authService.isLoggedIn === false);
+  }
 }

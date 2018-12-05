@@ -26,7 +26,7 @@ export class AccountComponent implements OnInit {
   accountMessages: string = '';
 
   ngOnInit() {
-    if (this.authService.isLoggedIn) {
+    if (this.isAuthenticated()) {
       let userParticipant = this.authService.userParticipant;
       this.firstName = userParticipant.firstName;
       this.lastName = userParticipant.lastName;
@@ -53,7 +53,15 @@ export class AccountComponent implements OnInit {
   loginSubmit(): void {
     this.authService.login(this.loginEmail, this.loginPassphrase).then(
       () => {
-        this.router.navigate([this.authService.redirectUrl]);
+        let userParticipant = this.authService.userParticipant;
+        this.firstName = userParticipant.firstName;
+        this.lastName = userParticipant.lastName;
+        this.email = userParticipant.email;
+        if (this.authService.redirectUrl === '') {
+          this.router.navigate(["topics/"]);
+        } else {
+          this.router.navigate([this.authService.redirectUrl]);
+        }
       }
     ).catch( error => {
       this.loginMessages = error;
@@ -63,7 +71,11 @@ export class AccountComponent implements OnInit {
   newAccountSubmit(): void {
     this.authService.createAccount(this.firstName, this.lastName, this.email, this.passphrase).then(
       () => {
-        this.router.navigate([this.authService.redirectUrl]);
+        if (this.authService.redirectUrl === '') {
+          this.router.navigate(["topics/"]);
+        } else {
+          this.router.navigate([this.authService.redirectUrl]);
+        }
       }
     ).catch( error => {
       this.accountMessages = error;

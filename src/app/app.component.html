@@ -1,13 +1,17 @@
 <!--The content below is only a placeholder and can be replaced.-->
 <div class="container">
-  <div class="row">
-  <div class="col-sm">
-    <h4>Topic Ideation</h4>
-    <i>Create or join Topics and collect ideas to vote on</i>
+  <div class="clearfix">
+    <div class="float-left">
+      <h4>Topic Ideation</h4>
+    </div>
+    <div class="float-right">
+      <a routerLink="/account" [ngClass]="'btn btn-link'">
+        <span *ngIf="isAuthenticated()">Account</span>
+        <span *ngIf="isNotAuthenticated()">Login</span>
+      </a>
+      <a routerLink="/logout" [ngClass]="'btn btn-link'" *ngIf="isAuthenticated()">Logout</a>
+    </div>
   </div>
-  <div class="col-sm-auto">
-    <a routerLink="/account" *ngIf="isAuthenticated()" [ngClass]="'btn btn-outline-default btn-sm'">Account</a>
-  </div>
-</div>
+  <i>Create or join Topics and collect ideas to vote on</i>
   <router-outlet></router-outlet>
 </div>

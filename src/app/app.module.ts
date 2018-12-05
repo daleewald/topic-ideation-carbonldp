@@ -10,6 +10,7 @@ import { TopicListComponent } from './topic-list/topic-list.component';
 import { AppRoutingModule } from './app-routing.module';
 import { ViewTopicComponent } from './view-topic/view-topic.component';
 import { AccountComponent } from './account/account.component';
+import { LogoutComponent } from './logout/logout.component';
 
 @NgModule({
   providers: [
@@ -21,7 +22,8 @@ import { AccountComponent } from './account/account.component';
     CreateTopicComponent,
     TopicListComponent,
     ViewTopicComponent,
-    AccountComponent
+    AccountComponent,
+    LogoutComponent
   ],
   imports: [
     BrowserModule,

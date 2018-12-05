@@ -33,6 +33,11 @@ export class AuthService {
     return promise;
   }
 
+  logout() {
+    this.isLoggedIn = false;
+    this.userParticipant = null;
+  }
+
   createAccount(firstName: string, lastName: string, email: string, passphrase: string):Promise<any> {
     this.isLoggedIn = false;
 
