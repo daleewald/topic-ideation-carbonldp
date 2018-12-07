@@ -1,27 +1,37 @@
+<nav [ngClass]="'listNav'">
+  <button (click)="navBack()" [ngClass]="'btn btn-outline-primary btn-sm'">Return</button>
+</nav>
 <div [ngClass]="'container'">
-  <div [ngClass]="'card'">
+  <div [ngClass]="'card mt-0'">
     <h5 [ngClass]="'card-header'">{{ topic.name }}</h5>
     <div [ngClass]="'card-body'">
-      <p [ngClass]="'lead'">
-        <strong>Owner: </strong><span class="badge badge-light">{{ topic.owner.firstName }} {{ topic.owner.lastName }}</span><br>
-        <strong>Participants: </strong>
-            <span *ngFor="let participant of topic.participants" class="badge badge-light">{{participant.firstName}} {{participant.lastName}}</span>
-      </p>
+      <div [ngClass]="'align-items-center'">
+        <div>
+          <strong>Owner: </strong>
+          <span class="badge badge-light">{{ topic.owner.firstName }} {{ topic.owner.lastName }}</span>
+        </div>
+        <div>
+          <strong>Participants: </strong>
+          <span *ngFor="let participant of topic.participants" class="badge badge-light">{{participant.firstName}} {{participant.lastName}}</span>
+        </div>
+        <button *ngIf="authService.isLoggedIn && !isParticipating()" [ngClass]="'btn btn-outline-primary btn-sm float-right'">Participate</button>
+      </div>
     </div>
   </div>
-  <div [ngClass]="'card'">
+  <ti-add-edit-idea *ngIf="authService.isLoggedIn && isParticipating()"></ti-add-edit-idea>
+  <div [ngClass]="'card mt-2'">
     <h6 [ngClass]="'card-header'">Ideas</h6>
-    <div [ngClass]="'card-body'">
+    <div [ngClass]="'card-body idea-list-card-body'">
       <ti-topic-idea-list></ti-topic-idea-list>
     </div>
   </div>
+</div>
+<div [ngClass]="'fixed-bottom m-1 text-center removal-section'" *ngIf="isAllowedToDelete()">
   <div *ngIf="isDeleteRequested()" [ngClass]="'form-group delete-group'">
-    <h6 [ngClass]="'card-title'">Enter the Topic Name to confirm you want to delete it, and click Delete again.</h6>
+    <h6 [ngClass]="'card-title'">Enter the Topic Name "{{topic.name}}" to confirm you want to delete it, and click Delete again.</h6>
     <input type="text" [formControl]="deleteTopicName" [ngClass]="'form-control'">
     <small [ngClass]="'form-text text-muted'">This will delete all data at URI :: {{topic.$id}}</small>
   </div>
-  <nav [ngClass]="'listNav'">
-    <button [ngClass]="'btn btn-primary btn-sm'" (click)="deleteTopic()" *ngIf="isAllowedToDelete()">Delete</button>
-    <button (click)="navBack()" [ngClass]="'btn btn-outline-primary btn-sm'">Return</button>
-  </nav>
+<button [ngClass]="'btn btn-outline-primary btn-sm'" (click)="stopDeleteTopic()" *ngIf="isDeleteRequested()">Cancel</button>
+<button [ngClass]="'btn btn-danger btn-sm ml-2'" (click)="deleteTopic()">Delete this Topic</button>
 </div>

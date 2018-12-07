@@ -1,1 +1,16 @@
 /* You can add global styles to this file, and also import other style files */
+.container {
+  padding:10px 7px !important;
+}
+.card-header {
+  padding: .75rem .5rem !important;
+}
+.card-body {
+  padding: .5rem !important;
+}
+.list-group-item {
+  padding: .5rem .5rem !important;
+}
+.col-0 {
+  padding: 0 !important;
+}

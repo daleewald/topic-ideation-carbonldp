@@ -30,6 +30,19 @@ export class TopicIdeaListComponent implements OnInit {
 
   }
 
+  isParticipating(): boolean {
+    let isOwner: boolean = this.topicService.selectedTopic.owner === this.authService.userParticipant;
+    return isOwner || false;
+  }
+
+  likeIdeaToggle(ideaId: any): void {
+    console.log('toggle Like', ideaId);
+  }
+
+  dislikeIdeaToggle(ideaId: any): void {
+    console.log('toggle Dislike', ideaId);
+  }
+
   getTopicIdeaListFromService() {
     this.topicService.listSelectedTopicIdeas().then(
       (selectedTopicIdeaList:any) => {

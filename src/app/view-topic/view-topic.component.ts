@@ -60,8 +60,17 @@ export class ViewTopicComponent implements OnInit {
 
   }
 
+  isParticipating(): boolean {
+    let isOwner: boolean = this.topicService.selectedTopic.owner === this.authService.userParticipant;
+    return isOwner || false;
+  }
+
   isAllowedToDelete() {
     return this.authService.isLoggedIn && (this.topic.owner === this.authService.userParticipant);
+  }
+
+  stopDeleteTopic() {
+    this.deleteRequested = false;
   }
 
   isDeleteRequested() {

@@ -11,3 +11,11 @@
 .delete-group {
   margin-top: 5px;
 }
+.idea-list-card-body {
+  padding: 0 !important;
+}
+.removal-section {
+  padding-top:5px;
+  background-color: #fff;
+  border-top: 2px dashed silver;
+}

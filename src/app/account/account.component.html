@@ -1,3 +1,4 @@
+<div><button (click)="navBack()" [ngClass]="'btn btn-outline-primary btn-sm'">Return</button></div>
 <div [ngClass]="'container'">
   <div [ngClass]="'row'">
     <div [ngClass]="'col-md'" *ngIf="!authService.isLoggedIn">
@@ -8,13 +9,13 @@
         <div [ngClass]="'form card-body'">
           <form (ngSubmit)="loginSubmit()" #loginForm="ngForm">
 
-            <div [ngClass]="'input-group input-group-sm mb-3'">
+            <div [ngClass]="'input-group input-group-sm mb-2'">
               <div [ngClass]="'input-group-prepend'">
                 <span [ngClass]="'input-group-text'" id="input-email-label">Email</span>
               </div>
               <input type="text" [ngClass]="'form-control'" id="loginEmail" required [(ngModel)]="loginEmail" name="loginEmail" aria-label="Enter participant email" aria-describedby="input-email-label">
             </div>
-            <div [ngClass]="'input-group input-group-sm mb-3'">
+            <div [ngClass]="'input-group input-group-sm mb-2'">
               <div [ngClass]="'input-group-prepend'">
                 <span [ngClass]="'input-group-text'" id="input-passphrase-label">Passphrase</span>
               </div>
@@ -25,8 +26,7 @@
                 {{ loginMessages }}
               </div>
             </div>
-            <button type="submit" [ngClass]="'btn btn-success btn-sm'" [disabled]="!loginForm.form.valid">Submit</button>
-            <button (click)="navBack()" [ngClass]="'btn btn-outline-primary btn-sm'">Return</button>
+            <button type="submit" [ngClass]="'btn btn-success btn-sm float-right'" [disabled]="!loginForm.form.valid">Submit</button>
 
           </form>
         </div>
@@ -43,25 +43,25 @@
         </h5>
         <div [ngClass]="'form card-body'">
           <form (ngSubmit)="newAccountSubmit()" #accountForm="ngForm">
-            <div [ngClass]="'input-group input-group-sm mb-3'">
+            <div [ngClass]="'input-group input-group-sm mb-2'">
               <div [ngClass]="'input-group-prepend'">
                 <span [ngClass]="'input-group-text'" id="input-firstName-label">First Name</span>
               </div>
               <input type="text" [ngClass]="'form-control'" id="firstName" required [(ngModel)]="firstName" name="firstName"  [disabled]="authService.isLoggedIn" aria-label="Enter First Name" aria-describedby="input-firstName-label">
             </div>
-            <div [ngClass]="'input-group input-group-sm mb-3'">
+            <div [ngClass]="'input-group input-group-sm mb-2'">
               <div [ngClass]="'input-group-prepend'">
                 <span [ngClass]="'input-group-text'" id="input-lastName-label">Last Name</span>
               </div>
               <input type="text" [ngClass]="'form-control'" id="lastName" required [(ngModel)]="lastName" name="lastName"  [disabled]="authService.isLoggedIn" aria-label="Enter Last Name" aria-describedby="input-lastName-label">
             </div>
-            <div [ngClass]="'input-group input-group-sm mb-3'">
+            <div [ngClass]="'input-group input-group-sm mb-2'">
               <div [ngClass]="'input-group-prepend'">
                 <span [ngClass]="'input-group-text'" id="input-email-label">Email</span>
               </div>
               <input type="text" [ngClass]="'form-control'" id="email" required [(ngModel)]="email" name="email" [disabled]="authService.isLoggedIn" aria-label="Enter participant email" aria-describedby="input-email-label">
             </div>
-            <div [ngClass]="'input-group input-group-sm mb-3'" *ngIf="!authService.isLoggedIn">
+            <div [ngClass]="'input-group input-group-sm mb-2'" *ngIf="!authService.isLoggedIn">
               <div [ngClass]="'input-group-prepend'">
                 <span [ngClass]="'input-group-text'" id="input-passphrase-label">Passphrase</span>
               </div>
@@ -73,9 +73,7 @@
                 {{ accountMessages }}
               </div>
             </div>
-            <button type="submit" [ngClass]="'btn btn-success btn-sm'" [disabled]="!accountForm.form.valid">Submit</button>
-            <button (click)="navBack()" [ngClass]="'btn btn-outline-primary btn-sm'">Return</button>
-
+            <button type="submit" [ngClass]="'btn btn-success btn-sm float-right'" [disabled]="!accountForm.form.valid">Submit</button>
           </form>
         </div>
       </div>
