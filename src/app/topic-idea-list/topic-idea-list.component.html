@@ -1,0 +1,15 @@
+<ti-add-edit-idea *ngIf="authService.isLoggedIn"></ti-add-edit-idea>
+<div [ngSwitch]="ideaList?.length">
+  <span *ngSwitchCase="0">No Ideas yet</span>
+  <ul *ngSwitchDefault [ngClass]="'list-group list-group-flush'" >
+  <li *ngFor="let idea of getSortedIdeaList()" [ngClass]="'list-group-item d-flex align-items-center clearfix'">
+    <span [ngClass]="'float-left col-sm'">{{ idea.description }}</span>
+    <button type="button" [ngClass]="'btn btn-primary float-right feedback-btn'">
+      <i class="far fa-thumbs-up"></i><span class="badge badge-light">{{idea.likes?.size}}</span>
+    </button>
+    <button type="button" [ngClass]="'btn btn-primary float-right feedback-btn'">
+      <i class="far fa-thumbs-down"></i><span class="badge badge-light">{{idea.dislikes?.size}}</span>
+    </button>
+  </li>
+  </ul>
+</div>

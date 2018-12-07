@@ -26,6 +26,14 @@ export class TopicListComponent implements OnInit {
   ngOnInit() {
   }
 
+  getSortedTopicList():any[] {
+    let topicListForSort: any[] = this.topicList.slice(0);
+    topicListForSort.sort((a,b):number => {
+      return a.name.localeCompare(b.name);
+    });
+    return topicListForSort;
+  }
+
   getTopicListFromService() {
     this.topicService.listTopicDocuments().then(
       (sTopicList:any) => {

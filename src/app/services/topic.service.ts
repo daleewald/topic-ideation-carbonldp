@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Topic } from './topic';
+import { Idea } from './idea';
 import { Participant } from './participant'
 import { CarbonLDP } from 'carbonldp/CarbonLDP';
 import { Document } from 'carbonldp/Document';
@@ -19,6 +20,10 @@ export class TopicService {
   topicsRoot: string = "topics/";
   participantsRoot: string = "participants/";
   private topicAddedSource = new Subject<Topic & Document>();
+  private topicSelectedSource = new Subject<Topic & Document>();
+  private ideaAddedSource = new Subject<Idea & Document>();
+
+  selectedTopic: Topic & Document = null;
 
   constructor() {
     this.carbonUri = environment.carbonldp.protocol + '://' + environment.carbonldp.host;
@@ -27,41 +32,59 @@ export class TopicService {
 
 
     this.carbonldp.extendObjectSchema( "Topic", {
+        "owner": {
+          "@type":"@id"
+        },
         "participants": {
+          "@type":"@id",
           "@container":"@set"
         }
     });
     this.carbonldp.extendObjectSchema( "Idea", {
        "likes": {
+         "@type":"@id",
          "@container":"@set"
        },
        "dislikes": {
+         "@type":"@id",
          "@container":"@set"
        }
-    });
-    this.carbonldp.extendObjectSchema( "Participant", {
-      "firstName":"string",
-      "lastName":"string",
-      "email":"string",
-      "passphrase":"string"
     });
 
   }
 
   getTopic(slug: string): Promise<Document & Topic> {
     let topicId:string = this.topicsRoot + slug + '/';
-    let promise: Promise<Document & Topic> = new Promise<Document & Topic>((resolve, reject) => {
-      this.carbonldp.documents.$get<Document & Topic>( topicId ).then(
-        (topic: Topic & Document) => {
-          topic.$resolve().then(
-            (topic: Topic & Document) => {
-              resolve(topic);
-            }
-          );
+    let promise: Promise<Document & Topic> = this.carbonldp.documents.$get<Topic>( topicId, _ => _
+      .withType( "Topic" )
+      .properties( {
+        "name": _.inherit,
+        "owner": {
+          "query": _ => _
+            .properties( {
+              "firstName": _.inherit,
+              "lastName": _.inherit,
+              "email": _.inherit
+            } )
+        },
+        "participants": {
+          "query": _ => _
+            .properties( {
+              "firstName": _.inherit,
+              "lastName": _.inherit,
+              "email": _.inherit
+            } )
         }
-      ).catch(error => reject(error));
-    });
+      })
+    );
     return promise;
+  }
+
+  topicSelected$ = this.topicSelectedSource.asObservable();
+
+  topicSelected(topic: Topic & Document) {
+    this.selectedTopic = topic;
+    this.topicSelectedSource.next(topic);
   }
 
   deleteTopic(topic: Document & Topic): Promise<any> {
@@ -69,25 +92,18 @@ export class TopicService {
   }
 
   listTopicDocuments() {
-    let promise = new Promise((resolve, reject) => {
-      this.carbonldp.documents.$getChildren<Topic>( this.topicsRoot ).then(
-        ( topics:( Topic & Document )[] ) => {
-          resolve(topics); // array of full documents
-        }
-      ).catch( error => { reject(error); });
-    });
+    let promise = this.carbonldp.documents.$getChildren<Topic>( this.topicsRoot );
     return promise;
   }
 
   listTopics() {
-    let promise = new Promise((resolve, reject) => {
-      this.carbonldp.documents.$listChildren<Topic>( this.topicsRoot ).then(
-        ( topics:( Topic & Document )[] ) => {
-          resolve(topics); // array of shallow documents
-        }
-      ).catch( error => { reject(error); });
-    });
+    let promise = this.carbonldp.documents.$listChildren<Topic>( this.topicsRoot );
     return promise;
+  }
+
+  listSelectedTopicIdeas():Promise<any> {
+    if (this.selectedTopic == null) return Promise.resolve([]);
+    return this.carbonldp.documents.$getChildren<Idea>( this.topicsRoot + this.selectedTopic.$slug + "/");
   }
 
   topicAdded$ = this.topicAddedSource.asObservable();
@@ -96,7 +112,7 @@ export class TopicService {
     this.topicAddedSource.next(topic);
   }
 
-  createTopic(topicName: string, owner: any, participants?: any[]) {
+  createTopic(topicName: string, owner: any, participants?: any[]): Promise<any> {
 
     const topic: Topic = {
       name: topicName,
@@ -105,22 +121,16 @@ export class TopicService {
       types: [ "Topic" ]
     };
 
-    let promise = new Promise((resolve, reject) => {
-
-    this.carbonldp.documents.$create(this.topicsRoot, topic, this.makeFriendlySlug(topicName) ).then(
-        ( topicDocument: Topic & Document ) => {
-          this.topicCreated(topicDocument);
-          resolve(topic);
+    let promise: Promise<void | Topic & Document> =
+      this.carbonldp.documents.$create(this.topicsRoot, topic, this.makeFriendlySlug(topicName) )
+      .catch( error => {
+        if (error instanceof ConflictError) {
+          Promise.reject("A topic already exists with this name/uri");
+        } else {
+          Promise.reject(error);
         }
-    ).catch( error => {
-      if (error instanceof ConflictError) {
-        reject("A topic already exists with this name/uri");
-      } else {
-        reject(error);
-      }
-    });
-  });
-  return promise;
+      });
+    return promise;
   }
 
   getParticipantByEmail(email: string): Promise<Document & Participant> {
@@ -128,7 +138,7 @@ export class TopicService {
     return this.carbonldp.documents.$get(this.participantsRoot + slug + "/");
   }
 
-  createParticipant(firstName:string, lastName:string, email:string, passphrase:string): Promise<Participant & Document> {
+  createParticipant(firstName:string, lastName:string, email:string, passphrase:string): Promise<any> {
     let slug: string = this.makeFriendlySlug(email);
     let participant:Participant = {
       firstName: firstName,
@@ -136,20 +146,34 @@ export class TopicService {
       email: email,
       passphrase: passphrase
     }
-    let promise:Promise<Participant & Document> = new Promise<Participant & Document>((resolve,reject) => {
-      this.carbonldp.documents.$create(this.participantsRoot, participant, slug).then(
-        ( participantDocument: Participant & Document) => {
-          resolve(participantDocument);
-        }
-      ).catch( error => {
+    let promise:Promise<void | Participant & Document> =
+      this.carbonldp.documents.$create(this.participantsRoot, participant, slug)
+      .catch( error => {
         if (error instanceof ConflictError) {
-          reject("A participant already exists with this email address");
+          Promise.reject("A participant already exists with this email address");
         } else {
-          reject(error);
+          Promise.reject(error);
         }
-      })
-    });
+      });
+
     return promise;
+  }
+
+  ideaAdded$ = this.ideaAddedSource.asObservable();
+
+  ideaCreated(idea: Idea & Document) {
+    this.ideaAddedSource.next(idea);
+  }
+
+  createTopicIdea(topicSlug: string, description: string): Promise<any> {
+
+    const idea: Idea = {
+      description: description,
+      types: [ "Idea" ]
+    };
+
+    return this.carbonldp.documents.$create(this.topicsRoot + topicSlug + '/', idea )
+    .then((savedIdea: Idea & Document) => { this.ideaCreated(savedIdea) });
   }
 
   /**

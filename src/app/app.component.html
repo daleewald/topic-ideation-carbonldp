@@ -2,14 +2,14 @@
 <div class="container">
   <div class="clearfix">
     <div class="float-left">
-      <h4>Topic Ideation</h4>
+      <h4>{{ title }}</h4>
     </div>
     <div class="float-right">
       <a routerLink="/account" [ngClass]="'btn btn-link'">
-        <span *ngIf="isAuthenticated()">Account</span>
-        <span *ngIf="isNotAuthenticated()">Login</span>
+        <span *ngIf="authService.isLoggedIn">Account</span>
+        <span *ngIf="!authService.isLoggedIn">Login</span>
       </a>
-      <a routerLink="/logout" [ngClass]="'btn btn-link'" *ngIf="isAuthenticated()">Logout</a>
+      <a routerLink="/logout" [ngClass]="'btn btn-link'" *ngIf="authService.isLoggedIn">Logout</a>
     </div>
   </div>
   <i>Create or join Topics and collect ideas to vote on</i>

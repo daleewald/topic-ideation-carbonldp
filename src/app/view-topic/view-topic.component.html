@@ -7,8 +7,12 @@
         <strong>Participants: </strong>
             <span *ngFor="let participant of topic.participants" class="badge badge-light">{{participant.firstName}} {{participant.lastName}}</span>
       </p>
-      <hr>
-      <small [ngClass]="'text-muted'">{{ topic | json }}</small>
+    </div>
+  </div>
+  <div [ngClass]="'card'">
+    <h6 [ngClass]="'card-header'">Ideas</h6>
+    <div [ngClass]="'card-body'">
+      <ti-topic-idea-list></ti-topic-idea-list>
     </div>
   </div>
   <div *ngIf="isDeleteRequested()" [ngClass]="'form-group delete-group'">

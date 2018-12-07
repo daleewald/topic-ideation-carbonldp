@@ -8,12 +8,6 @@ import { AuthService } from './services/auth.service';
 })
 export class AppComponent {
   constructor(private authService: AuthService) {}
-  title = 'topic-ideation';
+  title = 'Topic Ideation';
 
-  isAuthenticated(): boolean {
-    return this.authService.isLoggedIn;
-  }
-  isNotAuthenticated(): boolean {
-    return (this.authService.isLoggedIn === false);
-  }
 }

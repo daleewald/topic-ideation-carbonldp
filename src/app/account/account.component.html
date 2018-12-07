@@ -1,6 +1,6 @@
 <div [ngClass]="'container'">
   <div [ngClass]="'row'">
-    <div [ngClass]="'col-md'" *ngIf="isNotAuthenticated()">
+    <div [ngClass]="'col-md'" *ngIf="!authService.isLoggedIn">
       <div [ngClass]="'card'">
         <h5 [ngClass]="'card-header'">
           <span>Login</span>
@@ -32,14 +32,14 @@
         </div>
       </div>
     </div>
-    <div [ngClass]="'col-md-auto'" *ngIf="isNotAuthenticated()">
+    <div [ngClass]="'col-md-auto'" *ngIf="!authService.isLoggedIn">
       - Or -
     </div>
     <div [ngClass]="'col-md'">
       <div [ngClass]="'card'">
         <h5 [ngClass]="'card-header'">
-          <span *ngIf="isNotAuthenticated()">Register to Participate</span>
-          <span *ngIf="isAuthenticated()">My Participant Details</span>
+          <span *ngIf="!authService.isLoggedIn">Register to Participate</span>
+          <span *ngIf="authService.isLoggedIn">My Participant Details</span>
         </h5>
         <div [ngClass]="'form card-body'">
           <form (ngSubmit)="newAccountSubmit()" #accountForm="ngForm">
@@ -47,21 +47,21 @@
               <div [ngClass]="'input-group-prepend'">
                 <span [ngClass]="'input-group-text'" id="input-firstName-label">First Name</span>
               </div>
-              <input type="text" [ngClass]="'form-control'" id="firstName" required [(ngModel)]="firstName" name="firstName"  [disabled]="isAuthenticated()" aria-label="Enter First Name" aria-describedby="input-firstName-label">
+              <input type="text" [ngClass]="'form-control'" id="firstName" required [(ngModel)]="firstName" name="firstName"  [disabled]="authService.isLoggedIn" aria-label="Enter First Name" aria-describedby="input-firstName-label">
             </div>
             <div [ngClass]="'input-group input-group-sm mb-3'">
               <div [ngClass]="'input-group-prepend'">
                 <span [ngClass]="'input-group-text'" id="input-lastName-label">Last Name</span>
               </div>
-              <input type="text" [ngClass]="'form-control'" id="lastName" required [(ngModel)]="lastName" name="lastName"  [disabled]="isAuthenticated()" aria-label="Enter Last Name" aria-describedby="input-lastName-label">
+              <input type="text" [ngClass]="'form-control'" id="lastName" required [(ngModel)]="lastName" name="lastName"  [disabled]="authService.isLoggedIn" aria-label="Enter Last Name" aria-describedby="input-lastName-label">
             </div>
             <div [ngClass]="'input-group input-group-sm mb-3'">
               <div [ngClass]="'input-group-prepend'">
                 <span [ngClass]="'input-group-text'" id="input-email-label">Email</span>
               </div>
-              <input type="text" [ngClass]="'form-control'" id="email" required [(ngModel)]="email" name="email" [disabled]="isAuthenticated()" aria-label="Enter participant email" aria-describedby="input-email-label">
+              <input type="text" [ngClass]="'form-control'" id="email" required [(ngModel)]="email" name="email" [disabled]="authService.isLoggedIn" aria-label="Enter participant email" aria-describedby="input-email-label">
             </div>
-            <div [ngClass]="'input-group input-group-sm mb-3'" *ngIf="isNotAuthenticated()">
+            <div [ngClass]="'input-group input-group-sm mb-3'" *ngIf="!authService.isLoggedIn">
               <div [ngClass]="'input-group-prepend'">
                 <span [ngClass]="'input-group-text'" id="input-passphrase-label">Passphrase</span>
               </div>

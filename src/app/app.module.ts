@@ -11,6 +11,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { ViewTopicComponent } from './view-topic/view-topic.component';
 import { AccountComponent } from './account/account.component';
 import { LogoutComponent } from './logout/logout.component';
+import { TopicIdeaListComponent } from './topic-idea-list/topic-idea-list.component';
+import { AddEditIdeaComponent } from './add-edit-idea/add-edit-idea.component';
 
 @NgModule({
   providers: [
@@ -23,7 +25,9 @@ import { LogoutComponent } from './logout/logout.component';
     TopicListComponent,
     ViewTopicComponent,
     AccountComponent,
-    LogoutComponent
+    LogoutComponent,
+    TopicIdeaListComponent,
+    AddEditIdeaComponent
   ],
   imports: [
     BrowserModule,

@@ -17,7 +17,6 @@ export class ViewTopicComponent implements OnInit {
   deleteTopicName = new FormControl('');
   deleteRequested: boolean = false;
   deleteConfirmed: boolean = false;
-  participants: any = [];
   messages: string = '';
 
   constructor(
@@ -29,6 +28,7 @@ export class ViewTopicComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    console.log('onInit view-topic');
     this.getTopic();
   }
 
@@ -36,8 +36,9 @@ export class ViewTopicComponent implements OnInit {
     const slug = this.route.snapshot.paramMap.get('slug');
     this.topicService.getTopic(slug).then(
       (sTopic:any) => {
+        console.log("getTopic", sTopic);
           this.topic = sTopic;
-//          this.participants = sTopic.participants;
+          this.topicService.topicSelected(sTopic);
       }
     ).catch( error => console.log(error) );
   }
@@ -59,12 +60,8 @@ export class ViewTopicComponent implements OnInit {
 
   }
 
-  isAuthenticated():boolean {
-    return this.authService.isLoggedIn;
-  }
   isAllowedToDelete() {
-    console.log(this.topic);
-    return this.isAuthenticated() && (this.topic.owner === this.authService.userParticipant);
+    return this.authService.isLoggedIn && (this.topic.owner === this.authService.userParticipant);
   }
 
   isDeleteRequested() {

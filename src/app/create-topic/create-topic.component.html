@@ -8,7 +8,7 @@
         <small [ngClass]="'form-text text-muted'">URI :: {{uriToBe}}</small>
       </div>
         <nav [ngClass]="'listNav'">
-          <button [ngClass]="'btn btn-primary btn-sm'" (click)="createTopicInCarbonLDP()">Create</button>
+          <button type="submit" [ngClass]="'btn btn-primary btn-sm'" (click)="createTopicInCarbonLDP()">Create</button>
           <button (click)="navBack()" [ngClass]="'btn btn-outline-primary btn-sm'">Return</button>
         </nav>
 
