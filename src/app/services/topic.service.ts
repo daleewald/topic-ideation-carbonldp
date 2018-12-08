@@ -4,6 +4,7 @@ import { Idea } from './idea';
 import { Participant } from './participant'
 import { CarbonLDP } from 'carbonldp/CarbonLDP';
 import { Document } from 'carbonldp/Document';
+import { AccessPoint, TransientAccessPoint } from 'carbonldp/AccessPoint';
 import { ConflictError } from 'carbonldp/HTTP/Errors';
 import { Observable, of, Subject } from 'rxjs';
 import { environment } from '../../environments/environment';
@@ -41,11 +42,11 @@ export class TopicService {
         }
     });
     this.carbonldp.extendObjectSchema( "Idea", {
-       "likes": {
+       "likedBy": {
          "@type":"@id",
          "@container":"@set"
        },
-       "dislikes": {
+       "dislikedBy": {
          "@type":"@id",
          "@container":"@set"
        }
@@ -88,6 +89,11 @@ export class TopicService {
   }
 
   deleteTopic(topic: Document & Topic): Promise<any> {
+    for (let idx in topic.accessPoints) {
+      this.carbonldp.documents.$get(topic.accessPoints[idx].$id).then( (thisPoint: AccessPoint & Document) => {
+        thisPoint.$delete();
+      });
+    }
     return topic.$delete();
   }
 
@@ -103,7 +109,15 @@ export class TopicService {
 
   listSelectedTopicIdeas():Promise<any> {
     if (this.selectedTopic == null) return Promise.resolve([]);
-    return this.carbonldp.documents.$getChildren<Idea>( this.topicsRoot + this.selectedTopic.$slug + "/");
+    return this.carbonldp.documents.$getChildren<Idea>( this.topicsRoot + this.selectedTopic.$slug + "/",
+    _ => _
+     .withType( "Idea" )
+     .properties( {
+       "description": _.inherit,
+       "likedBy": _.inherit,
+       "dislikedBy": _.inherit
+     })
+   );
   }
 
   topicAdded$ = this.topicAddedSource.asObservable();
@@ -116,18 +130,49 @@ export class TopicService {
 
     const topic: Topic = {
       name: topicName,
-      owner: owner,
-      participants: participants,
       types: [ "Topic" ]
     };
 
+    let createdTopic;
+
     let promise: Promise<void | Topic & Document> =
       this.carbonldp.documents.$create(this.topicsRoot, topic, this.makeFriendlySlug(topicName) )
+      .then((newTopic: Topic & Document) => {
+        createdTopic = newTopic;
+      }).then( () => {
+        let topicOwnerAccessPoint = AccessPoint.create( {
+          hasMemberRelation: "owner",
+          isMemberOfRelation: "topicOwner"
+        });
+
+       return createdTopic.$create( topicOwnerAccessPoint, "owner").then(
+          (persistedOwnerAccessPoint: TransientAccessPoint & Document) => {
+            return persistedOwnerAccessPoint.$addMembers( [owner] );
+          }
+        );
+      }).then( () => {
+        let topicParticipantsAccessPoint = AccessPoint.create( {
+          hasMemberRelation: "participants",
+          isMemberOfRelation: "topicParticipant"
+        } );
+
+        return createdTopic.$create( topicParticipantsAccessPoint, "participants" ).then(
+          (persistedParticipantsAccessPoint: TransientAccessPoint & Document) => {
+            if (participants.length > 0) {
+              return persistedParticipantsAccessPoint.$addMembers( participants );
+            } else {
+              return;
+            }
+          }
+        );
+      }).then(() => {
+        return Promise.resolve(createdTopic);
+      })
       .catch( error => {
         if (error instanceof ConflictError) {
-          Promise.reject("A topic already exists with this name/uri");
+          return Promise.reject("A topic already exists with this name/uri");
         } else {
-          Promise.reject(error);
+          return Promise.reject(error);
         }
       });
     return promise;
@@ -150,9 +195,9 @@ export class TopicService {
       this.carbonldp.documents.$create(this.participantsRoot, participant, slug)
       .catch( error => {
         if (error instanceof ConflictError) {
-          Promise.reject("A participant already exists with this email address");
+          return Promise.reject("A participant already exists with this email address");
         } else {
-          Promise.reject(error);
+          return Promise.reject(error);
         }
       });
 
@@ -172,8 +217,62 @@ export class TopicService {
       types: [ "Idea" ]
     };
 
+    let savedIdea;
+
     return this.carbonldp.documents.$create(this.topicsRoot + topicSlug + '/', idea )
-    .then((savedIdea: Idea & Document) => { this.ideaCreated(savedIdea) });
+    .then((newIdea: Idea & Document) => {
+      savedIdea = newIdea;
+    }).then(() => {
+      let likesAccessPoint = AccessPoint.create( {
+        hasMemberRelation: "likedBy",
+        isMemberOfRelation: "likesIdeas"
+      });
+
+      return savedIdea.$create( likesAccessPoint, "likes").then(
+        (persistedLikesPoint: TransientAccessPoint & Document) => {
+          return; // persistedLikesPoint.$addMembers( //NONE YET// );
+        }
+      );
+    }).then(() => {
+      let dislikesAccessPoint = AccessPoint.create( {
+        hasMemberRelation: "dislikedBy",
+        isMemberOfRelation: "dislikesIdeas"
+      });
+
+      return savedIdea.$create( dislikesAccessPoint, "dislikes").then(
+        (persistedDislikesPoint: TransientAccessPoint & Document) => {
+          return; // persistedLikesPoint.$addMembers( //NONE YET// );
+        }
+      );
+    }).then(() => {
+      this.ideaCreated(savedIdea);
+    });
+  }
+
+  toggleIdeaLike(id: string, participant: any):any {
+    return this.carbonldp.documents.$get(id, _ => _
+     .withType( "Idea" )
+     .properties( {
+       "description": _.inherit,
+       "likedBy": _.inherit,
+       "dislikedBy": _.inherit
+     })
+   ).then((idea: Idea & Document) => {
+     let firstLike: boolean = Object.keys(idea).indexOf('likedBy') == -1;
+     let hasLike: boolean = false;
+     if (!firstLike){
+       hasLike = idea.likedBy.indexOf(participant) > -1;
+     }
+
+     return this.carbonldp.documents.$get(id + 'likes/').then( (point: AccessPoint & Document) => {
+       if (hasLike) {
+         point.$removeMember(participant);
+       } else {
+         point.$addMember(participant);
+       }
+       return idea.$refresh();
+      });
+    });
   }
 
   /**

@@ -5,11 +5,11 @@
     <span [ngClass]="'float-left col col-0'">{{ idea.description }}</span>
     <button type="button" (click)="likeIdeaToggle(idea.$id)" [disabled]="!authService.isLoggedIn || !isParticipating()"
     [ngClass]="'btn btn-outline-primary btn-sm float-right feedback-btn'">
-      <i class="far fa-thumbs-up"></i><span class="badge badge-light">{{idea.likes?.size}}</span>
+      <i class="far fa-thumbs-up"></i><span class="badge badge-light">{{idea.likedBy?.length}}</span>
     </button>
     <button type="button" (click)="dislikeIdeaToggle(idea.$id)" [disabled]="!authService.isLoggedIn || !isParticipating()"
     [ngClass]="'btn btn-outline-primary btn-sm float-right feedback-btn'">
-      <i class="far fa-thumbs-down"></i><span class="badge badge-light">{{idea.dislikes?.size}}</span>
+      <i class="far fa-thumbs-down"></i><span class="badge badge-light">{{idea.dislikedBy?.length}}</span>
     </button>
   </li>
   </ul>

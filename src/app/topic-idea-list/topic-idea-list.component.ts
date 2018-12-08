@@ -36,11 +36,25 @@ export class TopicIdeaListComponent implements OnInit {
   }
 
   likeIdeaToggle(ideaId: any): void {
-    console.log('toggle Like', ideaId);
+    this.topicService.toggleIdeaLike(ideaId, this.authService.userParticipant).then(
+      (idea: any) => {
+        let index:any = null;
+        for (let i in this.ideaList) {
+            if (this.ideaList[i].$id === ideaId) {
+              index = i;
+              break;
+            }
+        }
+        if (index != null) {
+          this.ideaList[index] = idea;
+          console.log('this.ideaList[index]', this.ideaList[index]);
+        }
+      }
+    );
   }
 
   dislikeIdeaToggle(ideaId: any): void {
-    console.log('toggle Dislike', ideaId);
+    console.log('toggle dislike', ideaId);
   }
 
   getTopicIdeaListFromService() {

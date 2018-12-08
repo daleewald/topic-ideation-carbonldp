@@ -61,7 +61,7 @@ export class ViewTopicComponent implements OnInit {
   }
 
   isParticipating(): boolean {
-    let isOwner: boolean = this.topicService.selectedTopic.owner === this.authService.userParticipant;
+    let isOwner: boolean = this.topic.owner === this.authService.userParticipant;
     return isOwner || false;
   }
 

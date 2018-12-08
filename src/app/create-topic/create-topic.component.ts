@@ -43,6 +43,7 @@ export class CreateTopicComponent implements OnInit {
 
     this.topicService.createTopic(this.topicName.value, userParticipant, [userParticipant]).then(
         ( topic:any) => {
+          console.log('createTopic resolved');
           this.isError = false;
           this.topicName.reset();
           this.showUriToBe('');
@@ -50,6 +51,7 @@ export class CreateTopicComponent implements OnInit {
           this.router.navigate(["/view-topic/" + topic.$slug ])
       }).catch(
         error => {
+          console.log('createTopic error');
           this.isError = true;
           this.output = error;
         }

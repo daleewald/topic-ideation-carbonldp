@@ -21,6 +21,7 @@ export class AuthService {
       this.topicService.getParticipantByEmail(slug).then(
         (participant: Participant) => {
           if (participant.passphrase === passphrase) {
+            console.log('Participant', participant);
             this.userParticipant = participant;
             this.isLoggedIn = true;
             resolve();
