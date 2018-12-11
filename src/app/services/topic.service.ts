@@ -263,6 +263,20 @@ export class TopicService {
   }
 
   toggleIdeaLikedBy(idea: any, participant: any): any {
+    const hasLike: boolean = idea.likedBy
+        && idea.likedBy.indexOf(participant) !== -1;
+
+    const memberAction: Promise<any> = hasLike
+        ? idea.$removeMember('likes/', participant)
+        : idea.$addMember('likes/', participant);
+
+    memberAction.then(_ => {
+        return idea.$refresh();
+    });
+  }
+
+/*
+  toggleIdeaLikedBy(idea: any, participant: any): any {
     let firstLike: boolean = Object.keys(idea).indexOf('likedBy') == -1;
     let hasLike: boolean = false;
     if (!firstLike){
@@ -279,7 +293,21 @@ export class TopicService {
       return idea.$refresh();
     });
   }
+*/
 
+  toggleIdeaDislikedBy(idea: any, participant: any): any {
+    const hasDislike: boolean = idea.dislikedBy
+        && idea.dislikedBy.indexOf(participant) !== -1;
+
+    const memberAction: Promise<any> = hasDislike
+        ? idea.$removeMember('dislikes/', participant)
+        : idea.$addMember('dislikes/', participant);
+
+    memberAction.then(_ => {
+        return idea.$refresh();
+    });
+  }
+/*
   toggleIdeaDislikedBy(idea: any, participant: any): any {
     let firstDislike: boolean = Object.keys(idea).indexOf('dislikedBy') == -1;
     let hasDislike: boolean = false;
@@ -297,7 +325,7 @@ export class TopicService {
       return idea.$refresh();
     });
   }
-
+*/
   /**
      * Takes a given string and makes it URL friendly. It ignores nonalphanumeric characters,
      * replaces spaces with hyphens, and makes everything lower case.
