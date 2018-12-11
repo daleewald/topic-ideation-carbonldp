@@ -32,29 +32,30 @@ export class TopicIdeaListComponent implements OnInit {
 
   isParticipating(): boolean {
     let isOwner: boolean = this.topicService.selectedTopic.owner === this.authService.userParticipant;
-    return isOwner || false;
+    let isParticipant: boolean = (this.topicService.selectedTopic.participants.indexOf(this.authService.userParticipant) > -1);
+    return isOwner || isParticipant;
   }
 
-  likeIdeaToggle(ideaId: any): void {
-    this.topicService.toggleIdeaLike(ideaId, this.authService.userParticipant).then(
-      (idea: any) => {
-        let index:any = null;
-        for (let i in this.ideaList) {
-            if (this.ideaList[i].$id === ideaId) {
-              index = i;
-              break;
-            }
-        }
-        if (index != null) {
-          this.ideaList[index] = idea;
-          console.log('this.ideaList[index]', this.ideaList[index]);
-        }
-      }
-    );
+  participantLikesIdea(idea: any): boolean {
+    if (Object.keys(idea).indexOf("likedBy") > -1) {
+      return idea.likedBy.indexOf(this.authService.userParticipant) > -1;
+    }
+    return false;
   }
 
-  dislikeIdeaToggle(ideaId: any): void {
-    console.log('toggle dislike', ideaId);
+  participantDislikesIdea(idea: any): boolean {
+    if (Object.keys(idea).indexOf("dislikedBy") > -1) {
+      return idea.dislikedBy.indexOf(this.authService.userParticipant) > -1;
+    }
+    return false;
+  }
+
+  likeIdeaToggle(idea: any): void {
+    this.topicService.toggleIdeaLikedBy(idea, this.authService.userParticipant);
+  }
+
+  dislikeIdeaToggle(idea: any): void {
+    this.topicService.toggleIdeaDislikedBy(idea, this.authService.userParticipant);
   }
 
   getTopicIdeaListFromService() {

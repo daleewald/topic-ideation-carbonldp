@@ -42,6 +42,9 @@ export class TopicService {
         }
     });
     this.carbonldp.extendObjectSchema( "Idea", {
+       "description": {
+         "@type":"string"
+       },
        "likedBy": {
          "@type":"@id",
          "@container":"@set"
@@ -204,6 +207,16 @@ export class TopicService {
     return promise;
   }
 
+  addTopicParticipant(participant: any) {
+    return this.carbonldp.documents.$get(this.selectedTopic.$id + 'participants/').then( (point: AccessPoint & Document) => {
+        return point.$addMember(participant);
+    }).then(
+        _ => {
+            return this.selectedTopic.$refresh();
+        }
+    );
+  }
+
   ideaAdded$ = this.ideaAddedSource.asObservable();
 
   ideaCreated(idea: Idea & Document) {
@@ -249,29 +262,39 @@ export class TopicService {
     });
   }
 
-  toggleIdeaLike(id: string, participant: any):any {
-    return this.carbonldp.documents.$get(id, _ => _
-     .withType( "Idea" )
-     .properties( {
-       "description": _.inherit,
-       "likedBy": _.inherit,
-       "dislikedBy": _.inherit
-     })
-   ).then((idea: Idea & Document) => {
-     let firstLike: boolean = Object.keys(idea).indexOf('likedBy') == -1;
-     let hasLike: boolean = false;
-     if (!firstLike){
-       hasLike = idea.likedBy.indexOf(participant) > -1;
-     }
+  toggleIdeaLikedBy(idea: any, participant: any): any {
+    let firstLike: boolean = Object.keys(idea).indexOf('likedBy') == -1;
+    let hasLike: boolean = false;
+    if (!firstLike){
+      hasLike = idea.likedBy.indexOf(participant) > -1;
+    }
 
-     return this.carbonldp.documents.$get(id + 'likes/').then( (point: AccessPoint & Document) => {
-       if (hasLike) {
-         point.$removeMember(participant);
-       } else {
-         point.$addMember(participant);
-       }
-       return idea.$refresh();
-      });
+    return this.carbonldp.documents.$get(idea.$id + 'likes/').then( (point: AccessPoint & Document) => {
+      if (hasLike) {
+        return point.$removeMember(participant);
+      } else {
+        return point.$addMember(participant);
+      }
+    }).then( _ => {
+      return idea.$refresh();
+    });
+  }
+
+  toggleIdeaDislikedBy(idea: any, participant: any): any {
+    let firstDislike: boolean = Object.keys(idea).indexOf('dislikedBy') == -1;
+    let hasDislike: boolean = false;
+    if (!firstDislike){
+      hasDislike = idea.dislikedBy.indexOf(participant) > -1;
+    }
+
+    return this.carbonldp.documents.$get(idea.$id + 'dislikes/').then( (point: AccessPoint & Document) => {
+      if (hasDislike) {
+        return point.$removeMember(participant);
+      } else {
+        return point.$addMember(participant);
+      }
+    }).then( _ => {
+      return idea.$refresh();
     });
   }
 

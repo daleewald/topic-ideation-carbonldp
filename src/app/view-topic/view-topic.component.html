@@ -14,7 +14,7 @@
           <strong>Participants: </strong>
           <span *ngFor="let participant of topic.participants" class="badge badge-light">{{participant.firstName}} {{participant.lastName}}</span>
         </div>
-        <button *ngIf="authService.isLoggedIn && !isParticipating()" [ngClass]="'btn btn-outline-primary btn-sm float-right'">Participate</button>
+        <button *ngIf="authService.isLoggedIn && !isParticipating()" [ngClass]="'btn btn-outline-primary btn-sm float-right'" (click)="addParticipant()">Participate</button>
       </div>
     </div>
   </div>
