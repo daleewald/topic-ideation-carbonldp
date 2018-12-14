@@ -266,52 +266,34 @@ export class TopicService {
     const hasLike: boolean = idea.likedBy
         && idea.likedBy.indexOf(participant) !== -1;
 
-    const memberAction: Promise<any> = hasLike
-        ? idea.$removeMember('likes/', participant)
-        : idea.$addMember('likes/', participant);
-
-    if (!hasLike) {
-      //action is a like, remove any dislike
-      this.removeDislike(idea, participant).then(_ => {
-          return memberAction.then(_ => {
+    if (hasLike) {
+      idea.$removeMember('likes/', participant).then(_ => {
+        return idea.$refresh();
+      });
+    } else {
+      idea.$removeMember('dislikes/', participant).then(_ => {
+          return idea.$addMember('likes/', participant).then(_ => {
               return idea.$refresh();
           });
       });
-    } else {
-      memberAction.then(_ => {
-          return idea.$refresh();
-      });
     }
-  }
-
-  removeLike(idea: any, participant: any): any {
-    return idea.$removeMember('likes/', participant);
   }
 
   toggleIdeaDislikedBy(idea: any, participant: any): any {
     const hasDislike: boolean = idea.dislikedBy
         && idea.dislikedBy.indexOf(participant) !== -1;
 
-    const memberAction: Promise<any> = hasDislike
-        ? idea.$removeMember('dislikes/', participant)
-        : idea.$addMember('dislikes/', participant);
-
-    if (!hasDislike) {
-      // action is a dislike, remove any like.
-      this.removeLike(idea, participant).then(_ => {
-        return memberAction.then(_ => {
+    if (hasDislike) {
+      idea.$removeMember('dislikes/', participant).then(_ => {
+        return idea.$refresh();
+      });
+    } else {
+      idea.$removeMember('likes/', participant).then(_ => {
+        return idea.$addMember('dislikes/', participant).then(_ => {
           return idea.$refresh();
         });
       });
-    } else {
-      memberAction.then(_ => {
-          return idea.$refresh();
-      });
     }
-  }
-
-  removeDislike(idea: any, participant: any): any {
-    return idea.$removeMember('dislikes/', participant);
   }
 
   /**
