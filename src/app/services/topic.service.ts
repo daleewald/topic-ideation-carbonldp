@@ -270,30 +270,23 @@ export class TopicService {
         ? idea.$removeMember('likes/', participant)
         : idea.$addMember('likes/', participant);
 
-    memberAction.then(_ => {
-        return idea.$refresh();
-    });
-  }
-
-/*
-  toggleIdeaLikedBy(idea: any, participant: any): any {
-    let firstLike: boolean = Object.keys(idea).indexOf('likedBy') == -1;
-    let hasLike: boolean = false;
-    if (!firstLike){
-      hasLike = idea.likedBy.indexOf(participant) > -1;
+    if (!hasLike) {
+      //action is a like, remove any dislike
+      this.removeDislike(idea, participant).then(_ => {
+          return memberAction.then(_ => {
+              return idea.$refresh();
+          });
+      });
+    } else {
+      memberAction.then(_ => {
+          return idea.$refresh();
+      });
     }
-
-    return this.carbonldp.documents.$get(idea.$id + 'likes/').then( (point: AccessPoint & Document) => {
-      if (hasLike) {
-        return point.$removeMember(participant);
-      } else {
-        return point.$addMember(participant);
-      }
-    }).then( _ => {
-      return idea.$refresh();
-    });
   }
-*/
+
+  removeLike(idea: any, participant: any): any {
+    return idea.$removeMember('likes/', participant);
+  }
 
   toggleIdeaDislikedBy(idea: any, participant: any): any {
     const hasDislike: boolean = idea.dislikedBy
@@ -303,29 +296,24 @@ export class TopicService {
         ? idea.$removeMember('dislikes/', participant)
         : idea.$addMember('dislikes/', participant);
 
-    memberAction.then(_ => {
-        return idea.$refresh();
-    });
-  }
-/*
-  toggleIdeaDislikedBy(idea: any, participant: any): any {
-    let firstDislike: boolean = Object.keys(idea).indexOf('dislikedBy') == -1;
-    let hasDislike: boolean = false;
-    if (!firstDislike){
-      hasDislike = idea.dislikedBy.indexOf(participant) > -1;
+    if (!hasDislike) {
+      // action is a dislike, remove any like.
+      this.removeLike(idea, participant).then(_ => {
+        return memberAction.then(_ => {
+          return idea.$refresh();
+        });
+      });
+    } else {
+      memberAction.then(_ => {
+          return idea.$refresh();
+      });
     }
-
-    return this.carbonldp.documents.$get(idea.$id + 'dislikes/').then( (point: AccessPoint & Document) => {
-      if (hasDislike) {
-        return point.$removeMember(participant);
-      } else {
-        return point.$addMember(participant);
-      }
-    }).then( _ => {
-      return idea.$refresh();
-    });
   }
-*/
+
+  removeDislike(idea: any, participant: any): any {
+    return idea.$removeMember('dislikes/', participant);
+  }
+
   /**
      * Takes a given string and makes it URL friendly. It ignores nonalphanumeric characters,
      * replaces spaces with hyphens, and makes everything lower case.
