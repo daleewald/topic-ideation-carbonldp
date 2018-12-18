@@ -8,7 +8,7 @@ import { TopicService } from '../services/topic.service';
   styleUrls: ['./add-edit-idea.component.css']
 })
 export class AddEditIdeaComponent implements OnInit {
-  description: FormControl = new FormControl('');
+  description = '';
 
   constructor(private topicService: TopicService) { }
 
@@ -16,8 +16,8 @@ export class AddEditIdeaComponent implements OnInit {
   }
 
   ideaSubmit(): void {
-    this.topicService.createTopicIdea(this.topicService.selectedTopic.$slug, this.description.value)
-    .then(() => this.description.reset() );
+    this.topicService.createTopicIdea(this.topicService.selectedTopic.$slug, this.description)
+    .then(() => this.description = '' );
   }
 
 }

@@ -26,12 +26,16 @@ export class AccountComponent implements OnInit {
   accountMessages: string = '';
 
   ngOnInit() {
-    if (this.authService.isLoggedIn) {
+    if (this.isLoggedIn()) {
       let userParticipant = this.authService.userParticipant;
       this.firstName = userParticipant.firstName;
       this.lastName = userParticipant.lastName;
       this.email = userParticipant.email;
     }
+  }
+
+  isLoggedIn(): boolean {
+    return this.authService.isLoggedIn;
   }
 
   hasLoginMessages(): boolean {

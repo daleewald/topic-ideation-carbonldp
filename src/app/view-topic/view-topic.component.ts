@@ -32,6 +32,10 @@ export class ViewTopicComponent implements OnInit {
     this.getTopic();
   }
 
+  isLoggedIn(): boolean {
+    return this.authService.isLoggedIn;
+  }
+
   getTopic(): void {
     const slug = this.route.snapshot.paramMap.get('slug');
     this.topicService.getTopic(slug).then(

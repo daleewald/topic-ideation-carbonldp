@@ -5,12 +5,12 @@
       <form #topicForm="ngForm" (ngSubmit)="createTopicInCarbonLDP()">
       <div [ngClass]="'form-group'">
         <h6 [ngClass]="'card-title'">Enter a Topic Name</h6>
-        <input #newTopic type="text" [(ngModel)]="topicName.value" name="topicName" [ngClass]="'form-control'" (keyup)="showUriToBe(newTopic.value)" required>
+        <input #newTopic type="text" [(ngModel)]="topicName" name="topicName" [ngClass]="'form-control'" (keyup)="showUriToBe(newTopic)" required>
         <small [ngClass]="'form-text text-muted'">URI :: {{uriToBe}}</small>
       </div>
         <nav [ngClass]="'listNav'">
           <button type="submit" [ngClass]="'btn btn-primary btn-sm'" [disabled]="!topicForm.form.valid">Create</button>
-          <button (click)="navBack()" [ngClass]="'btn btn-outline-primary btn-sm'">Return</button>
+          <button type="button" (click)="navBack()" [ngClass]="'btn btn-outline-primary btn-sm'">Return</button>
         </nav>
       </form>
 

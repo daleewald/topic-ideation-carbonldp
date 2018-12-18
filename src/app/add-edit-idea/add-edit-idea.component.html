@@ -3,7 +3,7 @@
     <div [ngClass]="'input-group-prepend'">
       <span [ngClass]="'input-group-text'" id="input-description-label">Add Idea</span>
     </div>
-    <input type="text" [ngClass]="'form-control float-left'" id="description" required [(ngModel)]="description.value" name="description" aria-label="Enter Idea Description" aria-describedby="input-description-label">
+    <input type="text" [ngClass]="'form-control float-left'" id="description" required [(ngModel)]="description" name="description" aria-label="Enter Idea Description" aria-describedby="input-description-label">
     <button type="submit" [ngClass]="'btn btn-outline-primary btn-sm float-right add-btn'" [disabled]="!ideaForm.form.valid">Add</button>
   </div>
 </form>

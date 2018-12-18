@@ -11,7 +11,7 @@ import { AuthService } from '../services/auth.service';
   styleUrls: ['./create-topic.component.css']
 })
 export class CreateTopicComponent implements OnInit {
-  topicName = new FormControl('');
+  topicName = '';
   output = '';
   isError = false;
   uriToBe = '';
@@ -41,11 +41,11 @@ export class CreateTopicComponent implements OnInit {
   createTopicInCarbonLDP() {
     let userParticipant = this.authService.userParticipant;
 
-    this.topicService.createTopic(this.topicName.value, userParticipant, [userParticipant]).then(
+    this.topicService.createTopic(this.topicName, userParticipant, [userParticipant]).then(
         ( topic:any) => {
           console.log('createTopic resolved');
           this.isError = false;
-          this.topicName.reset();
+          this.topicName = '';
           this.showUriToBe('');
           this.output = "Topic successfully created.";
           this.router.navigate(["/view-topic/" + topic.$slug ])

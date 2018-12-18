@@ -14,11 +14,11 @@
           <strong>Participants: </strong>
           <span *ngFor="let participant of topic.participants" class="badge badge-light">{{participant.firstName}} {{participant.lastName}}</span>
         </div>
-        <button *ngIf="authService.isLoggedIn && !isParticipating()" [ngClass]="'btn btn-outline-primary btn-sm float-right'" (click)="addParticipant()">Participate</button>
+        <button *ngIf="isLoggedIn() && !isParticipating()" [ngClass]="'btn btn-outline-primary btn-sm float-right'" (click)="addParticipant()">Participate</button>
       </div>
     </div>
   </div>
-  <ti-add-edit-idea *ngIf="authService.isLoggedIn && isParticipating()"></ti-add-edit-idea>
+  <ti-add-edit-idea *ngIf="isLoggedIn() && isParticipating()"></ti-add-edit-idea>
   <div [ngClass]="'card mt-2'">
     <h6 [ngClass]="'card-header'">Ideas</h6>
     <div [ngClass]="'card-body idea-list-card-body'">
