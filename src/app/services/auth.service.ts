@@ -14,10 +14,10 @@ export class AuthService {
 
   constructor(private topicService: TopicService) {}
 
-  login(email:string, passphrase: string):Promise<any> {
+  login(email: string, passphrase: string): Promise<any> {
     this.isLoggedIn = false; //
-    let slug:string = this.topicService.makeFriendlySlug(email);
-    let promise = new Promise((resolve, reject) => {
+    const slug: string = this.topicService.makeFriendlySlug(email);
+    const promise = new Promise((resolve, reject) => {
       this.topicService.getParticipantByEmail(slug).then(
         (participant: Participant) => {
           if (participant.passphrase === passphrase) {
@@ -25,7 +25,7 @@ export class AuthService {
             this.isLoggedIn = true;
             resolve();
           } else {
-            reject("Invalid passphrase.");
+            reject('Invalid passphrase.');
           }
         }
       ).catch( error => reject(error));
@@ -38,12 +38,12 @@ export class AuthService {
     this.userParticipant = null;
   }
 
-  createAccount(firstName: string, lastName: string, email: string, passphrase: string):Promise<any> {
+  createAccount(firstName: string, lastName: string, email: string, passphrase: string): Promise<any> {
     this.isLoggedIn = false;
 
-    let promise = new Promise<any>((resolve, reject) => {
+    const promise = new Promise<any>((resolve, reject) => {
       this.topicService.createParticipant(firstName, lastName, email, passphrase).then(
-        ( participant:Participant ) => {
+        ( participant: Participant ) => {
           this.isLoggedIn = true;
           this.userParticipant = participant;
           resolve();

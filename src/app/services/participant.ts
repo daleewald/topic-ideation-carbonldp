@@ -3,5 +3,5 @@ export interface Participant {
   lastName: string;
   email: string;
   passphrase: string;
-  [propName:string]: any;
+  [propName: string]: any;
 }
