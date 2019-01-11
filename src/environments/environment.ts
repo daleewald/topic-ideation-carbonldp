@@ -7,7 +7,6 @@ export const environment = {
   carbonldp: {
     protocol: 'http',
     // host: 'localhost:8083'
-    host: '3.88.164.109:8083'
   }
 };
 
