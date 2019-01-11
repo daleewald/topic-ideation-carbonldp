@@ -212,7 +212,7 @@ export class TopicService {
     return promise;
   }
 
-  addTopicParticipant(participant: any) {
+  async addTopicParticipant(participant: any) {
     return this.carbonldp.documents.$get(this.selectedTopic.$id + 'participants/').then( (point: AccessPoint & Document) => {
         return point.$addMember(participant);
     }).then(
@@ -226,14 +226,14 @@ export class TopicService {
     this.ideaAddedSource.next(idea);
   }
 
-  createTopicIdea(topicSlug: string, description: string): Promise<any> {
+  async createTopicIdea(topicSlug: string, description: string): Promise<any> {
 
     const idea: Idea = {
       description: description,
       types: [ 'Idea' ]
     };
 
-    let savedIdea;
+    let savedIdea: Idea & Document;
 
     return this.carbonldp.documents.$create(this.topicsRoot + topicSlug + '/', idea )
     .then((newIdea: Idea & Document) => {
