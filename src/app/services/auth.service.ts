@@ -10,7 +10,7 @@ export class AuthService {
   isLoggedIn = false;
   userParticipant: Participant = null;
 
-  redirectUrl: string;
+  redirectUrl = '';
 
   constructor(private topicService: TopicService) {}
 

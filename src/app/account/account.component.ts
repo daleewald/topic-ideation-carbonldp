@@ -17,17 +17,17 @@ export class AccountComponent implements OnInit {
 
   loginEmail: string;
   private loginPassphrase: string;
-  loginMessages: string = '';
+  loginMessages = '';
 
   firstName: string;
   lastName: string;
   email: string;
   private passphrase: string;
-  accountMessages: string = '';
+  accountMessages = '';
 
   ngOnInit() {
     if (this.isLoggedIn()) {
-      let userParticipant = this.authService.userParticipant;
+      const userParticipant = this.authService.userParticipant;
       this.firstName = userParticipant.firstName;
       this.lastName = userParticipant.lastName;
       this.email = userParticipant.email;
@@ -39,22 +39,22 @@ export class AccountComponent implements OnInit {
   }
 
   hasLoginMessages(): boolean {
-    return this.loginMessages != '';
+    return this.loginMessages !== '';
   }
 
   hasAccountMessages(): boolean {
-    return this.accountMessages != '';
+    return this.accountMessages !== '';
   }
 
   loginSubmit(): void {
     this.authService.login(this.loginEmail, this.loginPassphrase).then(
       () => {
-        let userParticipant = this.authService.userParticipant;
+        const userParticipant = this.authService.userParticipant;
         this.firstName = userParticipant.firstName;
         this.lastName = userParticipant.lastName;
         this.email = userParticipant.email;
         if (this.authService.redirectUrl === '') {
-          this.router.navigate(["topics/"]);
+          this.router.navigate(['topics/']);
         } else {
           this.router.navigate([this.authService.redirectUrl]);
         }
@@ -68,7 +68,7 @@ export class AccountComponent implements OnInit {
     this.authService.createAccount(this.firstName, this.lastName, this.email, this.passphrase).then(
       () => {
         if (this.authService.redirectUrl === '') {
-          this.router.navigate(["topics/"]);
+          this.router.navigate(['topics/']);
         } else {
           this.router.navigate([this.authService.redirectUrl]);
         }

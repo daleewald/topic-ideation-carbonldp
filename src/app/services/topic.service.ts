@@ -304,7 +304,7 @@ export class TopicService {
      * replaces spaces with hyphens, and makes everything lower case.
      * @param str The string to test
      */
-    makeFriendlySlug(str) {
+    makeFriendlySlug(str: string) {
         // \W represents any nonalphanumeric character so that, for example, 'A&P Grocery' becomes 'a-p-grocery'
         let friendlySlug = str.replace(/\W+/g, '-').toLowerCase();
         // If the last char was nonalphanumeric, we could end with a hyphen, so trim that off, if so...

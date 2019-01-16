@@ -23,7 +23,7 @@ export class TopicIdeaListComponent implements OnInit {
       topic => {
         this.getTopicIdeaListFromService();
       }
-    )
+    );
   }
 
   ngOnInit() {
@@ -31,20 +31,20 @@ export class TopicIdeaListComponent implements OnInit {
   }
 
   isParticipating(): boolean {
-    let isOwner: boolean = this.topicService.selectedTopic.owner === this.authService.userParticipant;
-    let isParticipant: boolean = (this.topicService.selectedTopic.participants.indexOf(this.authService.userParticipant) > -1);
+    const isOwner: boolean = this.topicService.selectedTopic.owner === this.authService.userParticipant;
+    const isParticipant: boolean = (this.topicService.selectedTopic.participants.indexOf(this.authService.userParticipant) > -1);
     return isOwner || isParticipant;
   }
 
   participantLikesIdea(idea: any): boolean {
-    if (Object.keys(idea).indexOf("likedBy") > -1) {
+    if (Object.keys(idea).indexOf('likedBy') > -1) {
       return idea.likedBy.indexOf(this.authService.userParticipant) > -1;
     }
     return false;
   }
 
   participantDislikesIdea(idea: any): boolean {
-    if (Object.keys(idea).indexOf("dislikedBy") > -1) {
+    if (Object.keys(idea).indexOf('dislikedBy') > -1) {
       return idea.dislikedBy.indexOf(this.authService.userParticipant) > -1;
     }
     return false;
@@ -60,15 +60,15 @@ export class TopicIdeaListComponent implements OnInit {
 
   getTopicIdeaListFromService() {
     this.topicService.listSelectedTopicIdeas().then(
-      (selectedTopicIdeaList:any) => {
+      (selectedTopicIdeaList: any) => {
           this.ideaList = selectedTopicIdeaList;
       }
     ).catch( error => { console.error(error); } );
   }
 
   getSortedIdeaList() {
-    let ideaListForSort: any[] = this.ideaList.slice(0);
-    ideaListForSort.sort((a,b):number => {
+    const ideaListForSort: any[] = this.ideaList.slice(0);
+    ideaListForSort.sort((a, b): number => {
       return a.created - b.created;
     });
     return ideaListForSort;
