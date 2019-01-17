@@ -3,8 +3,6 @@ os: linux
 files:
   - source: docs
     destination:  /var/www/html
-permissions:
-  permissions-specifications
 hooks:
   BeforeInstall:
     - location: pre-deploy.sh
