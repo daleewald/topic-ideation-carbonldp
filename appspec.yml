@@ -7,8 +7,8 @@ permissions:
   permissions-specifications
 hooks:
   BeforeInstall:
-    location: pre-deploy.sh
-    timeout: 30
+    - location: pre-deploy.sh
+      timeout: 30
   AfterInstall:
-    location: post-deploy.sh
-    timeout: 30
+    - location: post-deploy.sh
+      timeout: 30
