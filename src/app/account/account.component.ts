@@ -75,7 +75,7 @@ export class AccountComponent implements OnInit {
       }
     ).catch( error => {
       this.accountMessages = error;
-    })
+    });
   }
 
   navBack(): void {
