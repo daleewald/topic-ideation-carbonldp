@@ -21,6 +21,7 @@
             "assets": [
               "src/favicon.ico",
               "src/.htaccess",
+              "src/healthcheck.html",
               "src/assets"
             ],
             "styles": [
